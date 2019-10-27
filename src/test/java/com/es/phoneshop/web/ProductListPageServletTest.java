@@ -29,13 +29,12 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup(){
-        when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher("/WEB-INF/pages/productList.jsp")).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
-
         verify(requestDispatcher).forward(request, response);
     }
 }
