@@ -29,13 +29,14 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public Optional<Product> getProduct(Long id) {
         Optional<Product> product;
-        product = productListDao.stream().filter(prod -> prod.getId() == id).findFirst();
+        product = productListDao.stream().filter(prod -> prod.getId().equals(id)).findFirst();
         return product;
     }
 
     @Override
     public List<Product> findProducts() {
-        productListDao = productListDao.stream().filter(product -> product.getStock() > 0 && !product.getPrice().equals(0)).collect(Collectors.toCollection(ArrayList::new));
+        productListDao.stream().filter(product -> product.getStock() > 0 && !product.getPrice().equals(0))
+                               .collect(Collectors.toCollection(ArrayList::new));
         return productListDao;
     }
 
@@ -54,6 +55,6 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
-        productListDao = productListDao.stream().filter(s -> s.getId().compareTo(id) != 0).collect(Collectors.toList());
+        productListDao.stream().filter(s -> s.getId().compareTo(id) != 0).collect(Collectors.toList());//?
     }
 }
