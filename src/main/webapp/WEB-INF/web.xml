@@ -15,4 +15,8 @@
     <url-pattern>/products</url-pattern>
   </servlet-mapping>
 
+  <listener>
+    <listener-class>com.es.phoneshop.model.product.DaoProductListListener</listener-class>
+  </listener>
+
 </web-app>

@@ -6,7 +6,15 @@
 <jsp:useBean id="products" type="java.util.List" scope="request"/>
 <tags:master pageTitle="Product List">
   <p>
-    Welcome to Expert-Soft training!
+  <form>
+   <input name="query" value="${param.query}">
+  <button>Search</button>
+  </form>
+  </p>
+  <p>
+    <tr>
+      <td>${product.name}</td>
+    </tr>
   </p>
   <table>
     <thead>

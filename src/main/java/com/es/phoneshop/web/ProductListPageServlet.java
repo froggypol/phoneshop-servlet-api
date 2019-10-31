@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductListPageServlet extends HttpServlet {
@@ -19,13 +20,20 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     public void init() {
+        service = new Service();
         productListDao = service.getProductDaoService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("products", getSampleProducts());
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        String productName = "HTC";
+        List<Product> res = new ArrayList<>();
+        res.addAll(productListDao.searchFor(productName));
+        if(!res.isEmpty()) {
+            request.setAttribute("products", res);
+            request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        }
     }
 
     private List<Product> getSampleProducts() {
