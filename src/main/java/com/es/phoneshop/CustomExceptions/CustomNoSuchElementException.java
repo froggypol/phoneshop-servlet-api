@@ -1,11 +1,7 @@
-package CustomExceptions;
-
-import java.util.stream.Stream;
+package com.es.phoneshop.CustomExceptions;
 
 public class CustomNoSuchElementException extends Exception {
-//    @Override
-//    public String getMessage(String message, Throwable err) {
-//       super(message, err);
-//
-//    }
+    public CustomNoSuchElementException() {
+        super("No such product in list");
+    }
 }

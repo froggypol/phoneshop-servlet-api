@@ -17,17 +17,20 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
+
     @Mock
     private HttpServletRequest request;
+
     @Mock
     private HttpServletResponse response;
+
     @Mock
     private RequestDispatcher requestDispatcher;
 
     private ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Before
-    public void setup() throws ServletException{
+    public void setup() {
         servlet.init();
         when(request.getRequestDispatcher("/WEB-INF/pages/productList.jsp")).thenReturn(requestDispatcher);
     }
@@ -35,7 +38,7 @@ public class ProductListPageServletTest {
     @Test
     public void whenDoGetError() throws ServletException, IOException {
         servlet.doGet(request, response);
-        when(request.getAttribute("products")).thenReturn(servlet.productListDao.findProducts());
+        when(request.getAttribute("products")).thenReturn(servlet.getService().findProducts());
         System.out.println(request.getAttribute("products"));
         verify(requestDispatcher).forward(request, response);
     }

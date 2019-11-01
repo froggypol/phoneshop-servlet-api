@@ -5,7 +5,7 @@ import java.util.Currency;
 
 public class Product {
 
-    private volatile Long id;
+    private String id;
 
     private String description;
 
@@ -20,7 +20,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+    public Product(String id, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
         this.id = id;
         this.description = description;
         this.price = price;
@@ -29,11 +29,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
