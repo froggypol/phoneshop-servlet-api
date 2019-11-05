@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ProductListPageServlet extends HttpServlet {
+public class ProductDetailsPageServlet extends HttpServlet {
 
     private Service service;
 
@@ -19,15 +19,8 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String productNameQuery = request.getParameter("query");
-        String fieldToSort = request.getParameter("sortField");
-        String orderToSort = request.getParameter("order");
         String productDetailsId = request.getParameter("productId");
-        request.setAttribute("products", service.findProducts(productNameQuery, fieldToSort, orderToSort));
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
-    }
-
-    public Service getService() {
-        return service;
+        request.setAttribute("products", service.getProduct(productDetailsId));
+        request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp").forward(request, response);
     }
 }

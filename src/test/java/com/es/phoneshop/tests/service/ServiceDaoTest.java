@@ -1,6 +1,6 @@
 package com.es.phoneshop.tests.service;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class ServiceDaoTest {
 
     private Product product;
 
-    private ArrayListProductDao productList;
+    private CustomProductDao productList;
 
     @Before
     public void setup() {
@@ -41,7 +41,7 @@ public class ServiceDaoTest {
     }
 
     @Test
-    public void testWhenServiceDeleteNoResult() {           //?
+    public void testWhenServiceDeleteNoResult() {
         serviceDaoTest.delete(product.getId());
         assertFalse(productList.findProducts().contains(product));
     }

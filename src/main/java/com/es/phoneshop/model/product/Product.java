@@ -1,7 +1,10 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.history.price.menu.PriceHistory;
+
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Objects;
 
 public class Product {
 
@@ -17,6 +20,8 @@ public class Product {
 
     private String imageUrl;
 
+    private PriceHistory priceHistory;
+
     public Product() {
     }
 
@@ -27,6 +32,7 @@ public class Product {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+        this.priceHistory = new PriceHistory(this.description);
     }
 
     public String getId() {
@@ -75,5 +81,30 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setPriceHistory(PriceHistory priceHistory) {
+        this.priceHistory = priceHistory;
+    }
+
+    public PriceHistory getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setListPrices() {
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

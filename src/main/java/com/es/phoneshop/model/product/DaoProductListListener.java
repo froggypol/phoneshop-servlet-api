@@ -7,7 +7,7 @@ import java.util.Currency;
 
 public class DaoProductListListener implements ServletContextListener {
 
-    private static ArrayListProductDao singletonProductList;
+    private static CustomProductDao singletonProductList;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

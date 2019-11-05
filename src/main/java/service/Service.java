@@ -1,14 +1,14 @@
 package service;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
 
 public class Service {
 
-    private ArrayListProductDao productDaoService;
-    
+    private CustomProductDao productDaoService;
+
     private static Service serviceSingleton;
 
     private Service() {
@@ -16,25 +16,39 @@ public class Service {
     }
 
     public static Service getInstance() {
-        if(serviceSingleton == null) {
+        if (serviceSingleton == null) {
             serviceSingleton = new Service();
         }
         return serviceSingleton;
     }
 
     public Product getProduct(String id) {
-        return productDaoService.getProduct(id).get();
+        synchronized (id) {
+            return productDaoService.getProduct(id).get();
+        }
     }
 
     public List<Product> findProducts() {
-        return productDaoService.findProducts();
+        synchronized (this) {
+            return productDaoService.findProducts();
+        }
+    }
+
+    public List<Product> findProducts(String productName, String fieldToSort, String orderToSort) {
+        synchronized (this) {
+            return productDaoService.searchFor(productName, fieldToSort, orderToSort);
+        }
     }
 
     public void save(Product product) {
-        productDaoService.save(product);
+        synchronized (product) {
+            productDaoService.save(product);
+        }
     }
 
     public void delete(String id) {
-        productDaoService.delete(id);
+        synchronized (id) {
+            productDaoService.delete(id);
+        }
     }
 }
