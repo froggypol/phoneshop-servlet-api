@@ -4,7 +4,7 @@ import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
-import service.Service;
+import service.ProductService;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -12,9 +12,9 @@ import java.util.Currency;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-public class ServiceDaoTest {
+public class ProductServiceDaoTest {
 
-    private Service serviceDaoTest;
+    private ProductService serviceDaoTest;
 
     private Product product;
 

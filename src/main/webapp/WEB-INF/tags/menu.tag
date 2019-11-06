@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ attribute name="productDescription" required="true" %>
 <%@ attribute name="date" required="true" %>
@@ -12,11 +13,6 @@
     }
 </style>
 
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
 <ul class="menu">
     <li class="menu-item">
         <a>Tap here to see history</a>
@@ -28,9 +24,9 @@
                 <a>${date}</a>
             </li>
             <li>
-                <c:forEach var="oldPrice" items="${priceArchieve}">
+                <c:forEach var="price" items="${priceArchieve}">
             <li>
-                <a>${oldPrice}</a>
+                <a>${price}</a>
             </li>
             </c:forEach>
             </li>
@@ -64,7 +60,5 @@
         }
     }
 </script>
-</body>
-</html>
 
 

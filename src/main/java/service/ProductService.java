@@ -5,19 +5,19 @@ import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
 
-public class Service {
+public class ProductService {
 
     private CustomProductDao productDaoService;
 
-    private static Service serviceSingleton;
+    private static ProductService serviceSingleton;
 
-    private Service() {
+    private ProductService() {
         productDaoService = productDaoService.getInstance();
     }
 
-    public static Service getInstance() {
+    public static ProductService getInstance() {
         if (serviceSingleton == null) {
-            serviceSingleton = new Service();
+            serviceSingleton = new ProductService();
         }
         return serviceSingleton;
     }

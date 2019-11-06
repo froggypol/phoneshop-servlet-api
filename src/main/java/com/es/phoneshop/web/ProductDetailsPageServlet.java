@@ -1,6 +1,6 @@
 package com.es.phoneshop.web;
 
-import service.Service;
+import service.ProductService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
 
-    private Service service;
+    private ProductService service;
 
     @Override
     public void init() {
