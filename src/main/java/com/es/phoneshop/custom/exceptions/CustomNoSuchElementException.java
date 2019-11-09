@@ -1,4 +1,4 @@
-package com.es.phoneshop.CustomExceptions;
+package com.es.phoneshop.custom.exceptions;
 
 public class CustomNoSuchElementException extends Exception {
     public CustomNoSuchElementException() {

@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 public class Sort {
     public List<Product> sortProductsList(List<Product> listToSort, String fieldToSort, String orderToSort) {
-        if (fieldToSort == null && orderToSort == null)
-            return listToSort;
         return fieldToSort.equals("description") ? getSortedListForDescription(listToSort, orderToSort)
                 : getSortedListForPrice(listToSort, orderToSort);
     }

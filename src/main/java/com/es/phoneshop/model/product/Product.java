@@ -5,6 +5,7 @@ import com.es.phoneshop.history.price.menu.PriceHistory;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Product {
 
@@ -23,10 +24,13 @@ public class Product {
     private PriceHistory priceHistory;
 
     public Product() {
+        UUID uuid = UUID.randomUUID();
+        this.setId(uuid.toString());
     }
 
-    public Product(String id, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
+    public Product(String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        UUID uuid = UUID.randomUUID();
+        this.id = uuid.toString();
         this.description = description;
         this.price = price;
         this.currency = currency;

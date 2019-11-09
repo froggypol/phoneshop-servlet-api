@@ -1,16 +1,16 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Product;
+import com.google.gson.Gson;
 import service.ProductService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
 
-public class ProductListPageServlet extends HttpServlet {
+public class AjaxSortingOnDescription extends HttpServlet {
 
     private ProductService service;
 
@@ -20,18 +20,15 @@ public class ProductListPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> listProduct;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String productNameQuery = request.getParameter("query");
         String fieldToSort = request.getParameter("sortField");
         String orderToSort = request.getParameter("order");
-        listProduct = getList(productNameQuery, fieldToSort, orderToSort);
-        request.setAttribute("products", listProduct);
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
-    }
-
-    public List<Product> getList(String productNameQuery, String fieldToSort, String orderToSort) {
-        return service.findProducts(productNameQuery, fieldToSort, orderToSort);
+        Gson gson = new Gson();
+        PrintWriter out = response.getWriter();
+        out.print(gson.toJson(service.findProducts(productNameQuery, fieldToSort, orderToSort)));
+        out.flush();
+        out.close();
     }
 
     public void setService(ProductService service) {

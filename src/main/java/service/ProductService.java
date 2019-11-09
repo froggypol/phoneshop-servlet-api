@@ -12,7 +12,7 @@ public class ProductService {
     private static ProductService serviceSingleton;
 
     private ProductService() {
-        productDaoService = productDaoService.getInstance();
+        productDaoService = CustomProductDao.getInstance();
     }
 
     public static ProductService getInstance() {
@@ -23,32 +23,22 @@ public class ProductService {
     }
 
     public Product getProduct(String id) {
-        synchronized (id) {
-            return productDaoService.getProduct(id).get();
-        }
+        return productDaoService.getProduct(id).isPresent() ? productDaoService.getProduct(id).get() : null;
     }
 
     public List<Product> findProducts() {
-        synchronized (this) {
-            return productDaoService.findProducts();
-        }
+        return productDaoService.findProducts();
     }
 
     public List<Product> findProducts(String productName, String fieldToSort, String orderToSort) {
-        synchronized (this) {
-            return productDaoService.searchFor(productName, fieldToSort, orderToSort);
-        }
+        return productDaoService.searchFor(productName, fieldToSort, orderToSort);
     }
 
     public void save(Product product) {
-        synchronized (product) {
-            productDaoService.save(product);
-        }
+        productDaoService.save(product);
     }
 
     public void delete(String id) {
-        synchronized (id) {
-            productDaoService.delete(id);
-        }
+        productDaoService.delete(id);
     }
 }

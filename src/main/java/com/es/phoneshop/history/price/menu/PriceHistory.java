@@ -35,9 +35,9 @@ public class PriceHistory {
     }
 
     public void setPriceArchieve(List<BigDecimal> priceArchieve) {
-        priceArchieve.add(BigDecimal.valueOf(Math.random()*1000));
-        priceArchieve.add(BigDecimal.valueOf(Math.random()*1000));
-        priceArchieve.add(BigDecimal.valueOf(Math.random()*1000));
+        priceArchieve.add(BigDecimal.valueOf(Math.random() * 1000));
+        priceArchieve.add(BigDecimal.valueOf(Math.random() * 1000));
+        priceArchieve.add(BigDecimal.valueOf(Math.random() * 1000));
         this.priceArchieve = priceArchieve;
     }
 

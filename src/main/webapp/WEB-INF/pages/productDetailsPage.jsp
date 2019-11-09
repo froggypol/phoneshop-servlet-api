@@ -20,16 +20,16 @@
             </td>
         </tr>
         </thead>
-            <tr>
-                <td>
-                    <img class="product-tile"
-                         src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${products.imageUrl}">
-                </td>
-                <td>${products.description}</td>
-                <td class="price">
-                    <fmt:formatNumber value="${products.price}" type="currency"
-                                      currencySymbol="${products.currency.symbol}"/>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                <img class="product-tile"
+                     src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${products.imageUrl}">
+            </td>
+            <td>${products.description}</td>
+            <td class="price">
+                <fmt:formatNumber value="${products.price}" type="currency"
+                                  currencySymbol="${products.currency.symbol}"/>
+            </td>
+        </tr>
     </table>
 </tags:master>
