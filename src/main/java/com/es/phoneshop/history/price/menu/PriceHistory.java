@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Random;
 
 public class PriceHistory {
+
     private String productDescription;
+
     private List<BigDecimal> priceArchieve;
+
     private LocalDate date;
 
     public PriceHistory(String productDescription) {
