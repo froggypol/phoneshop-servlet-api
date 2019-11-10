@@ -46,7 +46,7 @@ public class ProductService {
         return productDaoService;
     }
 
-    public void setCustomProductDao(List<Product> toSet){
+    public void setCustomList(List<Product> toSet){
         productDaoService.setProductList(toSet);
     }
 }
