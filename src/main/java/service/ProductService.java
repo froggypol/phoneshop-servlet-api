@@ -22,8 +22,8 @@ public class ProductService {
         return serviceSingleton;
     }
 
-    public Product getProduct(String id) {
-        return productDaoService.getProduct(id).isPresent() ? productDaoService.getProduct(id).get() : null;
+    public Product getProductById(String id) {
+        return productDaoService.getProductById(id).isPresent() ? productDaoService.getProductById(id).get() : null;
     }
 
     public List<Product> findProducts() {
@@ -40,5 +40,13 @@ public class ProductService {
 
     public void delete(String id) {
         productDaoService.delete(id);
+    }
+
+    public CustomProductDao getCustomProductDao(){
+        return productDaoService;
+    }
+
+    public void setCustomProductDao(List<Product> toSet){
+        productDaoService.setProductList(toSet);
     }
 }

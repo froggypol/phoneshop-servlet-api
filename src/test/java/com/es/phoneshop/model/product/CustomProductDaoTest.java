@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,72 +16,71 @@ import static org.junit.Assert.assertFalse;
 
 public class CustomProductDaoTest {
 
-    private CustomProductDao productDao;
+    private CustomProductDao customProductList;
 
     private List<Product> listProducts = new ArrayList<>();
 
     @Before
     public void setup() {
-        productDao = CustomProductDao.getInstance();
-        listProducts = productDao.setProductList();
+        customProductList = CustomProductDao.getInstance();
+        listProducts = new ArrayList<>(Arrays.asList(
+                new Product("Samsung Galaxy S", new BigDecimal(100), Currency.getInstance("USD"), 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"),
+                new Product("Samsung Galaxy S II", new BigDecimal(200), Currency.getInstance("USD"), 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"),
+                new Product("Samsung Galaxy S III", new BigDecimal(300), Currency.getInstance("USD"), 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg")));
+        customProductList.setProductList(listProducts);
     }
 
     @Test
-    public void findProductsNoResultsWhenTestCustomProductDao() {
-        assertFalse(listProducts.isEmpty());
+    public void getProductListTest() {
+        assertFalse(customProductList.getProductList().isEmpty());
     }
 
     @Test
-    public void wrongResultForGetProductByIdWhenTestCustomProductDao() {
-        String idToFind = productDao.findProducts().get(0).getId();
-        assertEquals(listProducts.get(0), productDao.getProduct(idToFind).get());
-    }
-
-    @Test
-    public void wrongResultForGetNullProductWhenTestCustomProductDao() {
+    public void getProductByIdTest() {
         String idToFind = listProducts.get(0).getId();
         Product expected = listProducts.get(0);
-        assertEquals(expected, productDao.getProduct(idToFind).get());
+        assertEquals(expected, customProductList.getProductById(idToFind).get());
     }
 
     @Test
-    public void notDeletedProductWhenTestCustomProductDao() {
+    public void deletedTest() {
         String idToDelete = listProducts.get(0).getId();
         Product productToDetele = listProducts.get(0);
-        productDao.delete(idToDelete);
-        assertFalse(productDao.getProductList().contains(productToDetele));
+        customProductList.delete(idToDelete);
+        assertFalse(customProductList.getProductList().contains(productToDetele));
     }
 
     @Test
-    public void notSavedProductWhenTestCustomProductDao() {
+    public void saveTest() {
         Currency usd = Currency.getInstance("USD");
         Product toSave = new Product("Siemens2322 SXG75",
                 new BigDecimal(150), usd, 40,
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        productDao.save(toSave);
-        assertTrue(productDao.getProductList().contains(toSave));
+        customProductList.save(toSave);
+        assertTrue(customProductList.getProductList().contains(toSave));
     }
 
     @Test
-    public void notFoundProductByNameWhenTestCustomProductDao() {
+    public void searchForNameTest() {
         String productName = listProducts.get(0).getDescription();
-        List<Product> compareWith = listProducts.stream().filter(product ->
-                product.getDescription().contains(productName)).collect(Collectors.toList());
-        assertEquals(productDao.searchFor(productName, null, null),
+        List<Product> compareWith = listProducts.stream()
+                                                .filter(product -> product.getDescription().contains(productName))
+                                                .collect(Collectors.toList());
+        assertEquals(customProductList.searchFor(productName, null, null),
                 compareWith);
     }
 
     @Test
-    public void bugWithProductListSizeWhenTestCusstomProductDao() {
+    public void searchForTest() {
         String orderToSort = "asc";
         String fieldToSort = "desc";
-        assertTrue(productDao.searchFor(null, fieldToSort, orderToSort).size()
+        assertTrue(customProductList.searchFor(null, fieldToSort, orderToSort).size()
                 == listProducts.size());
     }
 
     @Test
-    public void bugWithProductListSizeWhenTestCusstomProductDaoWithNullParameters() {
-        assertTrue(productDao.searchFor(null, null, null).size()
+    public void searchForWithoutParamsTest() {
+        assertTrue(customProductList.searchFor(null, null, null).size()
                 == listProducts.size());
     }
 }

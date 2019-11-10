@@ -17,12 +17,12 @@
 
     <servlet>
         <servlet-name>ajaxSortingOnDescription</servlet-name>
-        <servlet-class>com.es.phoneshop.web.AjaxSortingOnDescription</servlet-class>
+        <servlet-class>com.es.phoneshop.web.AjaxSortingServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>ajaxSortingOnDescription</servlet-name>
-        <url-pattern>/products/ajax</url-pattern>
+        <url-pattern>/products/*</url-pattern>
     </servlet-mapping>
 
     <servlet>

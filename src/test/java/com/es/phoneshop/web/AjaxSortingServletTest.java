@@ -43,11 +43,9 @@ public class AjaxSortingServletTest {
 
     private String productname = "pName";
 
-    private String gSonTest = "fromJson";
-
     private List<Product> result = Collections.singletonList(new Product());
 
-    private AjaxSortingOnDescription servlet = new AjaxSortingOnDescription();
+    private AjaxSortingServlet servlet = new AjaxSortingServlet();
 
     private Gson gson = new Gson();
 
@@ -57,7 +55,7 @@ public class AjaxSortingServletTest {
     }
 
     @Test
-    public void whenDoGetError() throws ServletException, IOException {
+    public void doGetTest() throws IOException {
         when(request.getParameter("sortField")).thenReturn(fieldToSort);
         when(request.getParameter("order")).thenReturn(orderToSort);
         when(request.getParameter("query")).thenReturn(productname);

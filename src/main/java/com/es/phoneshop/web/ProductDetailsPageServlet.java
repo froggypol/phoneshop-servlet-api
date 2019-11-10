@@ -22,7 +22,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String productDetailsId = request.getParameter("productId");
         try {
-            Product product = service.getProduct(productDetailsId);
+            Product product = service.getProductById(productDetailsId);
             request.setAttribute("products", product);
             request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp").forward(request, response);
         } catch (NullPointerException e) {

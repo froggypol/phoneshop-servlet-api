@@ -1,6 +1,5 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.Product;
 import com.google.gson.Gson;
 import service.ProductService;
 
@@ -10,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class AjaxSortingOnDescription extends HttpServlet {
+public class AjaxSortingServlet extends HttpServlet {
 
     private ProductService service;
 

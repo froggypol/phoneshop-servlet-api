@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface ProductDao {
 
-    Optional<Product> getProduct(String id);
+    Optional<Product> getProductById(String id);
 
     List<Product> findProducts();
 

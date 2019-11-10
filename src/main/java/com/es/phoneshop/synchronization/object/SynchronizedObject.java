@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class SynchronizedObject {
 
-    private Map<String, Product> productPool = new HashMap<>();
+    private Map<String, Object> productPool = new HashMap<>();
 
     public SynchronizedObject(String idToCheck) {
         Product product;

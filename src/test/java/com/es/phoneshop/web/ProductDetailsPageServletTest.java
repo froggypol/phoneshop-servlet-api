@@ -49,9 +49,9 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void whenDoGetError() throws ServletException, IOException {
+    public void doGetTest() throws ServletException, IOException {
         when(request.getParameter("productId")).thenReturn(productID);
-        when(service.getProduct(productID)).thenReturn(product);
+        when(service.getProductById(productID)).thenReturn(product);
         when(request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp")).thenReturn(requestDispatcher);
 
         servlet.doGet(request, response);
