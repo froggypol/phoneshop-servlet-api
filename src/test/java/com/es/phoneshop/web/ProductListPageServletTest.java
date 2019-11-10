@@ -51,7 +51,7 @@ public class ProductListPageServletTest {
     }
 
     @Test
-    public void doGetTest() throws ServletException, IOException {
+    public void correctWorkWhenProductListPageServletDoGetTest() throws ServletException, IOException {
        when(request.getParameter("sortField")).thenReturn(fieldToSort);
        when(request.getParameter("order")).thenReturn(orderToSort);
        when(request.getParameter("query")).thenReturn(productname);

@@ -47,28 +47,28 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void saveTest() {
+    public void saveNewProductWhenProductServiceTestSave() {
         serviceTest.save(product);
         listProducts.add(product);
         assertTrue(serviceTest.getCustomProductDao().getProductList().contains(product));
     }
 
     @Test
-    public void deleteTest() {
+    public void removeProductWhenProductServiceTestDelete() {
         serviceTest.delete(product.getId());
         listProducts.remove(product);
         assertFalse(serviceTest.getCustomProductDao().getProductList().contains(product));
     }
 
     @Test
-    public void getProductByIdTest() {
+    public void findCorrectProductWhenProductServiceTestGetProductById() {
         Product p = serviceTest.getCustomProductDao().getProductList().get(0);
         serviceTest.getProductById(p.getId());
         assertTrue(serviceTest.getCustomProductDao().getProductList().contains(p));
     }
 
     @Test
-    public void findProductsTest() {
+    public void findCorrectProductListWhenProductServiceTestFindProducts() {
         Mockito.when(productList.getProductList()).thenReturn(listProducts);
         assertEquals(serviceTest.findProducts(null, null, null),
                 productList.getProductList());

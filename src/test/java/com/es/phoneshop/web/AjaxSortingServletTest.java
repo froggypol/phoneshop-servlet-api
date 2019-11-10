@@ -55,7 +55,7 @@ public class AjaxSortingServletTest {
     }
 
     @Test
-    public void doGetTest() throws IOException {
+    public void correctWorkWhenAjaxSortingServletDoGetTest() throws IOException {
         when(request.getParameter("sortField")).thenReturn(fieldToSort);
         when(request.getParameter("order")).thenReturn(orderToSort);
         when(request.getParameter("query")).thenReturn(productname);

@@ -1,30 +1,24 @@
 package com.es.phoneshop.synchronization.object;
 
-import com.es.phoneshop.model.product.Product;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SynchronizedObject {
 
-    private Map<String, Object> productPool = new HashMap<>();
+    private Map<String, Object> objectPool = new HashMap<>();
 
     public SynchronizedObject(String idToCheck) {
-        Product product;
-        if (productPool.containsKey(idToCheck)) {
-            returnIdFromPool(idToCheck);
+        Object object;
+        if (objectPool.containsKey(idToCheck)) {
+            returnObjectFromPool(idToCheck);
         } else {
-            product = new Product();
-            createId(product);
+            object = new Object();
+            objectPool.put(UUID.randomUUID().toString(), object);
         }
     }
 
-    private String returnIdFromPool(String id) {
-        return id;
-    }
-
-    private String createId(Product product) {
-        productPool.put(product.getId(), product);
-        return product.getId();
+    private Object returnObjectFromPool(String idToCheck) {
+        return objectPool.get(idToCheck);
     }
 }

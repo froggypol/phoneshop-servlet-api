@@ -49,7 +49,7 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void doGetTest() throws ServletException, IOException {
+    public void correctWorkWhenProductDetailsPageServletDoGetTest() throws ServletException, IOException {
         when(request.getParameter("productId")).thenReturn(productID);
         when(service.getProductById(productID)).thenReturn(product);
         when(request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp")).thenReturn(requestDispatcher);

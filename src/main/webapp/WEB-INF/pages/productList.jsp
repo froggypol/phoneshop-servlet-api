@@ -81,7 +81,7 @@
             $.ajax({
                 type: 'GET',
                 data: $(".product-tile").val(),
-                url: '${pageContext.request.contextPath}/products/ajax?query=${param.query}&sortField=description&order=asc',
+                url: '${pageContext.request.contextPath}/products/sortedList?query=${param.query}&sortField=description&order=asc',
                 success: function (result) {
                     var prods = JSON.parse(result);
                     var s = '';
@@ -102,7 +102,7 @@
             $.ajax({
                 type: 'GET',
                 data: $(".product-tile").val(),
-                url: '${pageContext.request.contextPath}/products/ajax?query=${param.query}&sortField=description&order=desc',
+                url: '${pageContext.request.contextPath}/products/sortedList?query=${param.query}&sortField=description&order=desc',
                 success: function (result) {
                     var prods = JSON.parse(result);
                     var s = '';
@@ -123,7 +123,7 @@
             $.ajax({
                 type: 'GET',
                 data: $(".product-tile").val(),
-                url: '${pageContext.request.contextPath}/products/ajax?query=${param.query}&sortField=price&order=asc',
+                url: '${pageContext.request.contextPath}/products/sortedList?query=${param.query}&sortField=price&order=asc',
                 success: function (result) {
                     var prods = JSON.parse(result);
                     var s = '';
@@ -144,7 +144,7 @@
             $.ajax({
                 type: 'GET',
                 data: $(".product-tile").val(),
-                url: '${pageContext.request.contextPath}/products/ajax?query=${param.query}&sortField=price&order=desc',
+                url: '${pageContext.request.contextPath}/products/sortedList?query=${param.query}&sortField=price&order=desc',
                 success: function (result) {
                     var prods = JSON.parse(result);
                     var s = '';
