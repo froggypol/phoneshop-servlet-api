@@ -58,7 +58,6 @@ public class ProductServiceTest {
     public void deleteTest() {
         serviceTest.delete(product.getId());
         listProducts.remove(product);
-        Mockito.when(serviceTest.getCustomProductDao().getProductList()).thenReturn(listProducts);
         assertFalse(serviceTest.getCustomProductDao().getProductList().contains(product));
     }
 
@@ -72,16 +71,7 @@ public class ProductServiceTest {
     @Test
     public void findProductsTest() {
         Mockito.when(productList.getProductList()).thenReturn(listProducts);
-        assertEquals(serviceTest.findProducts(null, null, null).size(),
-                productList.getProductList().size());
-    }
-
-    @Test
-    public void findProductsByNameTest() {
-        productList.getProductList().add(product);
-        assertEquals(serviceTest.findProducts(product.getDescription(), null, null),
-                productList.getProductList().stream()
-                                            .filter(product1 -> product1.getDescription()
-                                            .contains(product.getDescription())).collect(Collectors.toList()));
+        assertEquals(serviceTest.findProducts(null, null, null),
+                productList.getProductList());
     }
 }
