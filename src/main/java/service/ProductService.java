@@ -42,7 +42,7 @@ public class ProductService {
         productDaoService.delete(id);
     }
 
-    public CustomProductDao getCustomProductDao() {
+    public CustomProductDao getCustomProductDao() throws NullPointerException {
         return productDaoService;
     }
 
