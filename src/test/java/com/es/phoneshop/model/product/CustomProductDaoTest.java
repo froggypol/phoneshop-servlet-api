@@ -66,8 +66,7 @@ public class CustomProductDaoTest {
         List<Product> compareWith = listProducts.stream()
                                                 .filter(product -> product.getDescription().contains(productName))
                                                 .collect(Collectors.toList());
-        assertEquals(customProductDao.searchFor(productName, null, null),
-                compareWith);
+        assertEquals(compareWith, customProductDao.searchFor(productName, null, null));
     }
 
     @Test
@@ -80,6 +79,6 @@ public class CustomProductDaoTest {
 
     @Test
     public void correctResultForSearchingWhenCustomProductDaoTestSearchFor() {
-        assertEquals(customProductDao.searchFor(null, null, null),listProducts);
+        assertEquals(listProducts, customProductDao.searchFor(null, null, null));
     }
 }

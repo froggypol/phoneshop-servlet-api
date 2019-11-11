@@ -5,37 +5,32 @@ import java.util.stream.Collectors;
 
 public class Sort {
 
-    public List<Product> sortProductsList(List<Product> listToSort, String fieldToSort, String orderToSort) {
+    private List<Product> listToSort;
+
+    public Sort(List<Product> listToSort) {
+        this.listToSort = listToSort;
+    }
+
+    public List<Product> sortProductsList(String fieldToSort, String orderToSort) {
         return fieldToSort.equals("description") ?
-                           getSortedListForDescription(listToSort, orderToSort) :
-                           getSortedListForPrice(listToSort, orderToSort);
+                           sortingOnDescription(orderToSort) :
+                           sortingOnPrice(orderToSort);
     }
 
-    private List<Product> getSortedListForDescription(List<Product> listToSort, String orderToSort) {
-        return sortingOnDescription(listToSort, orderToSort);
+    private List<Product> sortingOnPrice(String order) {
+                     return listToSort.stream().sorted((prod1, prod2) -> {
+                         return order.equals("asc") ?
+                                      prod1.getPrice().compareTo(prod2.getPrice()) :
+                                      prod2.getPrice().compareTo(prod1.getPrice());
+                     })
+                                     .collect(Collectors.toList());
     }
 
-    private List<Product> getSortedListForPrice(List<Product> listToSort, String orderToSort) {
-        return sortingOnPrice(listToSort, orderToSort);
-    }
-
-    private List<Product> sortingOnDescription(List <Product> listToSort, String order) {
-        return order.equals("asc") ?
-                     listToSort.stream()
-                               .sorted((prod1, prod2) -> (prod1.getDescription().compareTo(prod2.getDescription())))
-                               .collect(Collectors.toList()) :
-                     listToSort.stream()
-                               .sorted((prod1, prod2) -> (prod2.getDescription().compareTo(prod1.getDescription())))
-                               .collect(Collectors.toList());
-    }
-
-    private List<Product> sortingOnPrice(List <Product> listToSort, String order) {
-        return order.equals("asc") ?
-                    listToSort.stream()
-                              .sorted((prod1, prod2) -> prod1.getPrice().compareTo(prod2.getPrice()))
-                              .collect(Collectors.toList()) :
-                    listToSort.stream()
-                              .sorted((prod1, prod2) -> prod2.getPrice().compareTo(prod1.getPrice()))
-                              .collect(Collectors.toList());
+    private List<Product> sortingOnDescription(String order) {
+        return listToSort.stream().sorted((prod1, prod2) -> {
+            return order.equals("asc") ?
+                         prod1.getDescription().compareTo(prod2.getDescription()) :
+                         prod2.getDescription().compareTo(prod1.getDescription());
+                    })   .collect(Collectors.toList());
     }
 }

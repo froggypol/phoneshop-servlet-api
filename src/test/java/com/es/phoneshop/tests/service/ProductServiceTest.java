@@ -70,7 +70,6 @@ public class ProductServiceTest {
     @Test
     public void findCorrectProductListWhenProductServiceTestFindProducts() {
         Mockito.when(productList.getProductList()).thenReturn(listProducts);
-        assertEquals(serviceTest.findProducts(null, null, null),
-                productList.getProductList());
+        assertEquals(productList.getProductList(), serviceTest.findProducts(null, null, null));
     }
 }
