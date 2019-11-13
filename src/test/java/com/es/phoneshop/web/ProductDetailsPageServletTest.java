@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class ProductDetailsPageServletTest {
     }
 
     @Test
-    public void correctWorkWhenProductDetailsPageServletDoGetTest() throws ServletException, IOException {
+    public void correctWorkWhenProductDetailsPageServletDoGetTest() throws ServletException, IOException, CustomNoSuchElementException {
         when(request.getParameter("productId")).thenReturn(productID);
         when(service.getProductById(productID)).thenReturn(product);
         when(request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp")).thenReturn(requestDispatcher);

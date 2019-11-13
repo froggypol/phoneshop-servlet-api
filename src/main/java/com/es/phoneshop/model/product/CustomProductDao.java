@@ -11,14 +11,17 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CustomProductDao implements ProductDao {
+public class CustomProductDao implements ProductDaoInterface {
 
-    private static CustomProductDao productListSingleton;
+    private static CustomProductDao productDao;
 
     private static List<Product> productList;
 
-    private CustomProductDao() {
+    private CustomProductDao() { }
+
+    private static void fillProductList() {
         Currency usd = Currency.getInstance("USD");
+        productList = new ArrayList<>();
         productList.add(new Product("Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg"));
         productList.add(new Product("Samsung Galaxy S II", new BigDecimal(200), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20II.jpg"));
         productList.add(new Product("Samsung Galaxy S III", new BigDecimal(300), usd, 5, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S%20III.jpg"));
@@ -35,40 +38,39 @@ public class CustomProductDao implements ProductDao {
     }
 
     public static CustomProductDao getInstance() {
-        if (productListSingleton == null) {
-            productList = new ArrayList<>();
-            productListSingleton = new CustomProductDao();
+        if (productDao == null) {
+            productDao = new CustomProductDao();
+            fillProductList();
         }
-        return productListSingleton;
+        return productDao;
     }
 
     @Override
     public Optional<Product> getProductById(String id) {
-        synchronized (new SynchronizedObject(id)) {
+        synchronized (SynchronizedObject.getSynchronizedObject(id)) {
                 return productList.stream()
-                                  .filter(prod -> prod.getId().equals(id)).findFirst();
+                                  .filter(prod -> prod.getId().equals(id))
+                                  .findAny();
         }
     }
 
     @Override
     public List<Product> findProducts() {
-        synchronized (this) {
             return productList.stream()
                               .filter(product -> product.getStock() > 0 && !product.getPrice().equals(BigDecimal.ZERO))
                               .collect(Collectors.toList());
-        }
     }
 
     @Override
     public void save(Product product) {
-        synchronized (new SynchronizedObject(product.getId())) {
+        synchronized (SynchronizedObject.getSynchronizedObject(product.getId())) {
             productList.add(product);
         }
     }
 
     @Override
     public void delete(String id) {
-        synchronized (new SynchronizedObject(id)) {
+        synchronized (SynchronizedObject.getSynchronizedObject(id)) {
             productList = productList.stream()
                                      .filter(product -> !product.getId().equals(id))
                                      .collect(Collectors.toList());
@@ -76,7 +78,6 @@ public class CustomProductDao implements ProductDao {
     }
 
     public List<Product> searchFor(String productName, String fieldToSort, String orderToSort) {
-        synchronized (new SynchronizedObject(productName)) {
             Sort sort = new Sort(productList);
             List<Product> res = new ArrayList<>();
             if (productName == null && fieldToSort == null && orderToSort == null) {
@@ -94,7 +95,6 @@ public class CustomProductDao implements ProductDao {
             } else {
                 return sort.sortProductsList(fieldToSort, orderToSort);
             }
-        }
     }
 
     public List<Product> getProductList() {

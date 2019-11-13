@@ -6,19 +6,20 @@ import java.util.UUID;
 
 public class SynchronizedObject {
 
-    private Map<String, Object> objectPool = new HashMap<>();
+    private static Map<String, Object> objectPool = new HashMap<>();
 
-    public SynchronizedObject(String idToCheck) {
+    public static Object getSynchronizedObject(String idToCheck) {
         Object object;
         if (objectPool.containsKey(idToCheck)) {
-            returnObjectFromPool(idToCheck);
+            return returnObjectFromPool(idToCheck);
         } else {
             object = new Object();
             objectPool.put(UUID.randomUUID().toString(), object);
+            return object;
         }
     }
 
-    private Object returnObjectFromPool(String idToCheck) {
+    private static  Object returnObjectFromPool(String idToCheck) {
         return objectPool.get(idToCheck);
     }
 }

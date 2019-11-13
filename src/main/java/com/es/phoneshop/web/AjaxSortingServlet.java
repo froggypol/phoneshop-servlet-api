@@ -23,8 +23,11 @@ public class AjaxSortingServlet extends HttpServlet {
         String productNameQuery = request.getParameter("query");
         String fieldToSort = request.getParameter("sortField");
         String orderToSort = request.getParameter("order");
+
         Gson gson = new Gson();
+
         PrintWriter out = response.getWriter();
+
         out.print(gson.toJson(service.findProducts(productNameQuery, fieldToSort, orderToSort)));
         out.flush();
         out.close();

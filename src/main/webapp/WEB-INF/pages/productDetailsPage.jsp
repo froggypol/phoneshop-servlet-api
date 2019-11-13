@@ -11,6 +11,7 @@
         </tr>
     </p>
     <table>
+
         <thead>
         <tr>
             <td>Image</td>
@@ -33,3 +34,11 @@
         </tr>
     </table>
 </tags:master>
+
+<script>
+    function wasAdded() {
+        var visibleGreenResult = document.getElementById("successAdding");
+        visibleGreenResult.style.color = "green";
+        visibleGreenResult.style.visibility = "visible";
+    }
+</script>

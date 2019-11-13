@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.model.product.Product;
 import service.ProductService;
 
@@ -25,7 +26,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Product product = service.getProductById(productDetailsId);
             request.setAttribute("products", product);
             request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp").forward(request, response);
-        } catch (NullPointerException e) {
+        } catch (CustomNoSuchElementException e) {
             request.getRequestDispatcher("/WEB-INF/pages/customError.jsp").forward(request, response);
         }
     }

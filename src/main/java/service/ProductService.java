@@ -1,9 +1,11 @@
 package service;
 
+import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProductService {
 
@@ -22,8 +24,13 @@ public class ProductService {
         return serviceSingleton;
     }
 
-    public Product getProductById(String id) throws NullPointerException {
-        return productDaoService.getProductById(id).get();
+    public Product getProductById(String id) throws CustomNoSuchElementException {
+        Optional<Product> product = productDaoService.getProductById(id);
+        if (product.isPresent())
+            return product.get();
+        else {
+            throw new CustomNoSuchElementException();
+        }
     }
 
     public List<Product> findProducts() {

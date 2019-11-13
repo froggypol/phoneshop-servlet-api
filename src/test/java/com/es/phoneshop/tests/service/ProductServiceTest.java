@@ -1,5 +1,6 @@
 package com.es.phoneshop.tests.service;
 
+import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.Product;
 import org.junit.Before;
@@ -61,7 +62,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void findCorrectProductWhenProductServiceTestGetProductById() {
+    public void findCorrectProductWhenProductServiceTestGetProductById() throws CustomNoSuchElementException {
         Product p = serviceTest.getCustomProductDao().getProductList().get(0);
         serviceTest.getProductById(p.getId());
         assertTrue(serviceTest.getCustomProductDao().getProductList().contains(p));
