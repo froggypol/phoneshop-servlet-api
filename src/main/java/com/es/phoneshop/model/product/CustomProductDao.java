@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CustomProductDao implements ProductDaoInterface {
+public class CustomProductDao implements ProductDao {
 
     private static CustomProductDao productDao;
 

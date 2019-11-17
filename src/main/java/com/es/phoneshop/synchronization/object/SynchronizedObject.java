@@ -19,7 +19,7 @@ public class SynchronizedObject {
         }
     }
 
-    private static  Object returnObjectFromPool(String idToCheck) {
+    private static Object returnObjectFromPool(String idToCheck) {
         return objectPool.get(idToCheck);
     }
 }

@@ -19,6 +19,8 @@ public class Product {
 
     private int stock;
 
+    private int ordered;
+
     private String imageUrl;
 
     private PriceHistory priceHistory;
@@ -95,8 +97,14 @@ public class Product {
         return priceHistory;
     }
 
-    public void setListPrices() {
+    public void setListPrices() { }
 
+    public int getOrdered() {
+        return ordered;
+    }
+
+    public void setOrdered(int ordered) {
+        this.ordered = ordered;
     }
 
     @Override
