@@ -5,7 +5,8 @@ import com.es.phoneshop.cart.CartItem;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,12 @@ public class CartServiceSession implements CartService {
 
     private CartItem cartItem;
 
+    private SessionService sessionService;
+
     private CartServiceSession() {
         cartItemList = new ArrayList<>();
         productService = ProductService.getInstance();
+        sessionService = SessionService.getInstance();
     }
 
     public static CartServiceSession getInstance() {
@@ -35,49 +39,52 @@ public class CartServiceSession implements CartService {
     }
 
     @Override
-    public Cart getCart(HttpSession session) {
-        cart = (Cart) session.getAttribute("cart");
+    public Cart getCart(HttpServletRequest request, HttpServletResponse response) {
+        cart = sessionService.getCart(request, response);
         if (cart == null) {
             cart = new Cart();
-            session.setAttribute("cart", cart);
         }
+        sessionService.setCart(cart, request, response);
         return cart;
     }
 
     @Override
     public int countQuantity() {
-        int resultQuantity = 0;
-        for (CartItem cartItem : cartItemList) {
-            resultQuantity = resultQuantity + cartItem.getQuantity();
-        }
-        return resultQuantity;
+        return cart.getListCartItem().stream().mapToInt(CartItem::getQuantity).sum();
     }
 
     @Override
     public BigDecimal countCost() {
-        BigDecimal resultCost = BigDecimal.ZERO;
-        for (CartItem cartItem : cartItemList) {
-            resultCost = resultCost.add(cartItem.getProductItem().getPrice());
-        }
-        return resultCost;
+        return cart.getListCartItem().stream()
+                           .map(CartItem::getProductItem)
+                           .map(Product::getPrice)
+                           .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
-    public void addToCart(String id, int quantity, HttpSession session) throws OutOfStockException {
-        cart = getCart(session);
+    public void addToCart(String id, int quantity, HttpServletRequest request, HttpServletResponse response) throws OutOfStockException {
+        cart = sessionService.getCart(request, response);
         Product productToAdd = productService.getProductById(id);
         cartItem = new CartItem(quantity, productToAdd);
         cartItemList = cart.getListCartItem();
-        if (!cart.getListCartItem().contains(cartItem)) {
-            productToAdd.setOrdered(quantity);
+        if(quantity > productToAdd.getStock() || productToAdd.getStock() == 0) {
+            throw new OutOfStockException();
+        }
+        if (!cartItemList.contains(cartItem)) {
+            cartItem.setQuantity(quantity);
             cart.getListCartItem().add(cartItem);
             return;
-        } else {
-            int indexAddedItem = cart.getListCartItem().indexOf(cartItem);
-            Product addedProduct = cart.getListCartItem().get(indexAddedItem).getProductItem();
-            cartItemList.add(cartItem);
-            addedProduct.setOrdered(quantity + addedProduct.getOrdered());
-            recalculate();
+        } else if (cartItemList.contains(cartItem)){
+            CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
+            if(quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
+                int mew = quantity + addedItem.getQuantity();
+                addedItem.setQuantity(mew);
+                cartItemList.set(cartItemList.indexOf(cartItem), addedItem);// refresh
+                recalculate();
+                cart.setCartItemList(cartItemList);
+            } else {
+                throw new OutOfStockException();
+            }
         }
     }
 
@@ -88,16 +95,7 @@ public class CartServiceSession implements CartService {
         cart.setTotalCost(resultCost);
     }
 
-    public void addProductToViewedList(Product product) {
-        if (cart.getRecentlyViewedProducts().contains(product))
-            return;
-        if (cart.getRecentlyViewedProducts().size() == 3) {
-            cart.getRecentlyViewedProducts().remove();
-        }
-        cart.getRecentlyViewedProducts().add(product);
-    }
-
     public void setCartList(List<CartItem> list) {
-        cartItemList = list;
+        cart.setCartItemList(list);
     }
 }

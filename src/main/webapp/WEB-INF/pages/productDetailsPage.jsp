@@ -18,17 +18,17 @@
                 <button>Add</button>
                 <c:choose>
                 <c:when test="${not empty param.errorMessage || not empty error}">
-        <p>
-            <a style="color: crimson">Adding products failed:c</a>
-        </p>
-        </c:when>
-        <c:when test="${not empty param.message}">
-            <p>
-                <a style="color: seagreen">Adding ${quantity} products ${param.message} c:</a>
-            </p>
-        </c:when>
-        </c:choose>
-        </form>
+                    <p>
+                         <a style="color: crimson">Adding products failed:c</a>
+                    </p>
+                </c:when>
+                <c:when test="${not empty param.message}">
+                    <p>
+                        <a style="color: seagreen">Adding ${quantity} products ${param.message} c:</a>
+                    </p>
+                 </c:when>
+                </c:choose>
+            </form>
         </p>
         <thead>
         <tr>

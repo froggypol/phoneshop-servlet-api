@@ -1,18 +1,12 @@
 package com.es.phoneshop.cart;
 
-import com.es.phoneshop.model.product.Product;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class Cart {
 
     private List<CartItem> cartItemList;
-
-    private Queue<Product> recentlyViewedProducts;
 
     private int totalQuantity;
 
@@ -20,7 +14,6 @@ public class Cart {
 
     public Cart() {
         cartItemList = new ArrayList<>();
-        recentlyViewedProducts = new LinkedList<>();
     }
 
     public Cart(List<CartItem> listCartItem) {
@@ -29,6 +22,10 @@ public class Cart {
 
     public List<CartItem> getListCartItem() {
         return cartItemList;
+    }
+
+    public void setCartItemList(List<CartItem> cartItemList) {
+        this.cartItemList = cartItemList;
     }
 
     public int getTotalQuantity() {
@@ -41,9 +38,5 @@ public class Cart {
 
     public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
-    }
-
-    public Queue<Product> getRecentlyViewedProducts() {
-        return recentlyViewedProducts;
     }
 }

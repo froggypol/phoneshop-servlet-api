@@ -18,7 +18,6 @@ public class DaoProductListListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         productListSingleton = CustomProductDao.getInstance();
         productServiceSingleton = ProductService.getInstance();
-        cartServiceSingleton = CartServiceSession.getInstance();
     }
 
     @Override

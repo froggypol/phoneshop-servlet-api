@@ -1,37 +1,42 @@
 package validation;
 
-import com.es.phoneshop.custom.exceptions.OutOfStockException;
-import com.es.phoneshop.model.product.Product;
+import service.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class CustomValidation {
 
     private String quantity;
 
-    private ErrorMap errorMap;
+    private static CustomValidation customValidation;
 
-    public CustomValidation() {
-        errorMap = ErrorMap.getInstance();
+    private SessionService sessionService;
+
+    private CustomValidation(){
+        sessionService = SessionService.getInstance();
     }
 
-    public boolean validQuantityNumberFormat(HttpServletRequest request, HttpServletResponse response) {
-        quantity = request.getParameter("quantity");
-        if (quantity.toLowerCase().matches("[a-z]+")) {
-            errorMap.customException(quantity, new NumberFormatException());
-            return false;
+    public static CustomValidation getInstance() {
+        if (customValidation == null) {
+            customValidation = new CustomValidation();
         }
-        return true;
+        return customValidation;
     }
 
-    public boolean validQuantityInStock(Product product, HttpServletRequest request, HttpServletResponse response) {
+    public int validQuantity(ErrorMap errorMap, Locale locale, HttpServletRequest request, HttpServletResponse response) {
         quantity = request.getParameter("quantity");
-        int quantityToAdd = Integer.valueOf(quantity);
-        if (product.getOrdered() + quantityToAdd > product.getStock()) {
-            errorMap.customException(quantity, new OutOfStockException());
-            return false;
+        int qnt = 0;
+        try {
+            qnt = NumberFormat.getInstance(locale).parse(quantity).intValue();
         }
-        return true;
+        catch (ParseException e) {
+            errorMap.customException("quantity", "Parse exception");
+            sessionService.setErrorMapInSessionAttribute(request, response);
+        }
+        return qnt;
     }
 }

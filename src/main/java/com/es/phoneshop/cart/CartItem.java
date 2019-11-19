@@ -2,6 +2,7 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.model.product.Product;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class CartItem {
@@ -25,6 +26,10 @@ public class CartItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public BigDecimal getCost(){
+        return productItem.getPrice();
     }
 
     public void setQuantity(int quantity) {

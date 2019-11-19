@@ -1,9 +1,13 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.cart.RecentlyViewedProductsService;
 import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
+import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.parsing.ParseQuantityService;
 import service.CartServiceSession;
 import service.ProductService;
+import service.SessionService;
 import validation.CustomValidation;
 import validation.ErrorMap;
 
@@ -13,8 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.Locale;
 
 public class ProductDetailsPageServlet extends HttpServlet {
@@ -23,21 +25,28 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private CartServiceSession cartService;
 
-    private ErrorMap errorMap;
-
     private HttpSession session;
+
+    private CustomValidation customValidation;
+
+    private RecentlyViewedProductsService recentlyViewedProducts;
+
+    private SessionService sessionService;
+
+    private ErrorMap errorMap;
 
     @Override
     public void init() {
         productService = ProductService.getInstance();
         cartService = CartServiceSession.getInstance();
-        errorMap = ErrorMap.getInstance();
+        customValidation = CustomValidation.getInstance();
+        recentlyViewedProducts = new RecentlyViewedProductsService();
+        sessionService = SessionService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        session = request.getSession();
-        session.setAttribute("cart", cartService.getCart(session));
+        sessionService.setCart(cartService.getCart(request, response), request, response);
         try {
             showPage(request, response);
         } catch (CustomNoSuchElementException e) {
@@ -47,29 +56,30 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        session = request.getSession();
+        session = sessionService.getSession(request, response);
         String productQuantityToAdd = request.getParameter("quantity");
         String productDetailsId = getProductId(request);
-        Product product = productService.getProductById(productDetailsId);
-        int quantityToAdd = 0;
-        CustomValidation customValidation = new CustomValidation();
-        try {
-            if (customValidation.validQuantityNumberFormat(request, response)) {
-                quantityToAdd = getQuantity(Locale.ENGLISH, productQuantityToAdd);
-                request.setAttribute("quantity", productQuantityToAdd);
-            } else {
-                showPageInNANCase(request, response);
+        int quantityToAdd;
+        errorMap = sessionService.getErrorMapFromSession(request, response);
+        customValidation.validQuantity(errorMap, Locale.ENGLISH, request, response);
+        Integer countExceptions = errorMap.getExceptionListSize("quantity");
+        if (countExceptions == null) {
+            quantityToAdd = new ParseQuantityService().parsingQuantity(Locale.ENGLISH, request, response);
+            request.setAttribute("quantity", productQuantityToAdd);
+            try {
+                cartService.addToCart(productDetailsId, quantityToAdd, request, response);
             }
-            if (customValidation.validQuantityInStock(product, request, response))
-                cartService.addToCart(productDetailsId, quantityToAdd, session);
-            else {
+            catch (OutOfStockException e) {
+                errorMap.customException("quantity", "OutOfStockException");
+                sessionService.setErrorMapInSessionAttribute(request, response);
                 response.sendRedirect(request.getRequestURI() + "?errorMessage=failed");
                 return;
             }
-        } catch (ParseException e) {
-            errorMap.customException("quantity", new ParseException(e.getMessage(), e.getErrorOffset()));
+        } else {
+            request.setAttribute("error", errorMap.getExceptionList("quantity"));
+            showPageInInvalidQuantityCase(request, response);
+            return;
         }
-
         response.sendRedirect(request.getRequestURI() + "?message=success");
     }
 
@@ -79,8 +89,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
         request.setAttribute("prod", product);
         request.setAttribute("quantity", request.getParameter("quantity"));
         request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp").forward(request, response);
-        cartService.addProductToViewedList(productService.getProductById(productId));
-        request.getSession().setAttribute("recentlyViewedProducts", cartService.getCart(request.getSession()).getRecentlyViewedProducts());
+        recentlyViewedProducts.getRecentlyViewedProducts(request, response);
+        recentlyViewedProducts.addProductToViewedList(productService.getProductById(productId), request, response);
+        recentlyViewedProducts.setRecentlyViewedProducts(request, response);
     }
 
     public String getProductId(HttpServletRequest request) {
@@ -89,13 +100,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         return productId;
     }
 
-    private int getQuantity(Locale locale, String quantityStr) throws ParseException {
-        return NumberFormat.getInstance(locale).parse(quantityStr).intValue();
-    }
-
-    private void showPageInNANCase(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        errorMap.customException("quantity", new NumberFormatException());
-        request.setAttribute("error", errorMap.getExceptionList("quantity"));
+    private void showPageInInvalidQuantityCase(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         showPage(request, response);
         return;
     }

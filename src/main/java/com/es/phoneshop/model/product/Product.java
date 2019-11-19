@@ -19,8 +19,6 @@ public class Product {
 
     private int stock;
 
-    private int ordered;
-
     private String imageUrl;
 
     private PriceHistory priceHistory;
@@ -98,14 +96,6 @@ public class Product {
     }
 
     public void setListPrices() { }
-
-    public int getOrdered() {
-        return ordered;
-    }
-
-    public void setOrdered(int ordered) {
-        this.ordered = ordered;
-    }
 
     @Override
     public boolean equals(Object o) {
