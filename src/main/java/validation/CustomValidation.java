@@ -30,6 +30,9 @@ public class CustomValidation {
     public int validQuantity(ErrorMap errorMap, Locale locale, HttpServletRequest request, HttpServletResponse response) {
         quantity = request.getParameter("quantity");
         int qnt = 0;
+        if (!quantity.toLowerCase().matches("[0-9]+")) {
+            errorMap.customException("quantity", "Parse exception");
+        }
         try {
             qnt = NumberFormat.getInstance(locale).parse(quantity).intValue();
         }
