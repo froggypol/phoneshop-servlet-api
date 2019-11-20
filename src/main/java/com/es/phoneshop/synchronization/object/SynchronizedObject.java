@@ -2,7 +2,6 @@ package com.es.phoneshop.synchronization.object;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class SynchronizedObject {
 
@@ -12,9 +11,10 @@ public class SynchronizedObject {
         Object object;
         if (objectPool.containsKey(idToCheck)) {
             return returnObjectFromPool(idToCheck);
-        } else {
+        }
+        else {
             object = new Object();
-            objectPool.put(UUID.randomUUID().toString(), object);
+            objectPool.put(idToCheck, object);
             return object;
         }
     }

@@ -1,7 +1,5 @@
 package validation;
 
-import service.SessionService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.NumberFormat;
@@ -14,10 +12,7 @@ public class CustomValidation {
 
     private static CustomValidation customValidation;
 
-    private SessionService sessionService;
-
-    private CustomValidation(){
-        sessionService = SessionService.getInstance();
+    private CustomValidation() {
     }
 
     public static CustomValidation getInstance() {
@@ -38,7 +33,6 @@ public class CustomValidation {
         }
         catch (ParseException e) {
             errorMap.customException("quantity", "Parse exception");
-            sessionService.setErrorMapInSessionAttribute(request, response);
         }
         return qnt;
     }

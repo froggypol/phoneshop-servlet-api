@@ -1,13 +1,12 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.cart.RecentlyViewedProductsService;
+import service.RecentlyViewedProductsService;
 import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.parsing.ParseQuantityService;
-import service.CartServiceSession;
+import service.SessionCartService;
 import service.ProductService;
-import service.SessionService;
 import validation.CustomValidation;
 import validation.ErrorMap;
 
@@ -23,7 +22,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductService productService;
 
-    private CartServiceSession cartService;
+    private SessionCartService cartService;
 
     private HttpSession session;
 
@@ -31,22 +30,19 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentlyViewedProductsService recentlyViewedProducts;
 
-    private SessionService sessionService;
-
     private ErrorMap errorMap;
 
     @Override
     public void init() {
         productService = ProductService.getInstance();
-        cartService = CartServiceSession.getInstance();
+        cartService = SessionCartService.getInstance();
         customValidation = CustomValidation.getInstance();
-        recentlyViewedProducts = new RecentlyViewedProductsService();
-        sessionService = SessionService.getInstance();
+        recentlyViewedProducts = RecentlyViewedProductsService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.setCart(cartService.getCart(request, response), request, response);
+        cartService.setCart(cartService.getCart(request, response), request, response);
         try {
             showPage(request, response);
         } catch (CustomNoSuchElementException e) {
@@ -56,14 +52,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        session = sessionService.getSession(request, response);
+        session = request.getSession();
         String productQuantityToAdd = request.getParameter("quantity");
         String productDetailsId = getProductId(request);
         int quantityToAdd;
-        errorMap = sessionService.getErrorMapFromSession(request, response);
+        errorMap = new ErrorMap();
         customValidation.validQuantity(errorMap, Locale.ENGLISH, request, response);
-        Integer countExceptions = errorMap.getExceptionListSize("quantity");
-        if (countExceptions == null) {
+        int countExceptions = errorMap.getExceptionList().size();
+        if (countExceptions == 0) {
             quantityToAdd = new ParseQuantityService().parsingQuantity(Locale.ENGLISH, request, response);
             request.setAttribute("quantity", productQuantityToAdd);
             try {
@@ -71,12 +67,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
             }
             catch (OutOfStockException e) {
                 errorMap.customException("quantity", "OutOfStockException");
-                sessionService.setErrorMapInSessionAttribute(request, response);
                 response.sendRedirect(request.getRequestURI() + "?errorMessage=failed");
                 return;
             }
         } else {
-            request.setAttribute("error", errorMap.getExceptionList("quantity"));
+            request.setAttribute("error", errorMap.getExceptionList());
             showPageInInvalidQuantityCase(request, response);
             return;
         }
@@ -89,9 +84,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
         request.setAttribute("prod", product);
         request.setAttribute("quantity", request.getParameter("quantity"));
         request.getRequestDispatcher("/WEB-INF/pages/productDetailsPage.jsp").forward(request, response);
-        recentlyViewedProducts.getRecentlyViewedProducts(request, response);
-        recentlyViewedProducts.addProductToViewedList(productService.getProductById(productId), request, response);
-        recentlyViewedProducts.setRecentlyViewedProducts(request, response);
+        recentlyViewedProducts.getRecentlyViewedProducts(request);
+        recentlyViewedProducts.addProductToViewedList(productService.getProductById(productId));
+        recentlyViewedProducts.setRecentlyViewedProducts(request);
     }
 
     public String getProductId(HttpServletRequest request) {
@@ -109,7 +104,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         this.productService = productService;
     }
 
-    public void setCartService(CartServiceSession cartService) {
+    public void setCartService(SessionCartService cartService) {
         this.cartService = cartService;
     }
 }
