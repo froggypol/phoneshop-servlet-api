@@ -17,7 +17,7 @@
                 <input id="bttAdd" name="quantity" value="${param.query}">
                 <button>Add</button>
                 <c:choose>
-                <c:when test="${not empty param.errorMessage || not empty error}">
+                <c:when test="${not empty errorMap}">
                     <p>
                          <a style="color: crimson">Adding products failed:c</a>
                     </p>

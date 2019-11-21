@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 
 public interface CartService {
 
-    Cart getCart(HttpServletRequest request, HttpServletResponse response);
+    Cart getCart(HttpServletRequest request);
 
     void addToCart(String id, int quantity, HttpServletRequest request, HttpServletResponse response) throws OutOfStockException;
 
-    int countQuantity();
+    int countQuantity(HttpServletRequest request, HttpServletResponse response);
 
-    BigDecimal countCost();
+    BigDecimal countCost(HttpServletRequest request, HttpServletResponse response);
 }

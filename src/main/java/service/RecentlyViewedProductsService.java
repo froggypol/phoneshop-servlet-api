@@ -9,37 +9,34 @@ import java.util.Queue;
 
 public class RecentlyViewedProductsService {
 
-    private Queue<Product> recentlyViewedList;
+    private static RecentlyViewedProductsService recentlyViewedProductsService;
 
-    private static RecentlyViewedProductsService recentlyViewedProducts;
-
-    private RecentlyViewedProductsModel recentlyViewedListModel;
-
-    private RecentlyViewedProductsService() {
-        recentlyViewedList = new LinkedList<>();
-    }
+    private RecentlyViewedProductsService() {}
 
     public static RecentlyViewedProductsService getInstance() {
-        if (recentlyViewedProducts == null) {
-            recentlyViewedProducts = new RecentlyViewedProductsService();
+        if (recentlyViewedProductsService == null) {
+            recentlyViewedProductsService = new RecentlyViewedProductsService();
         }
-        return recentlyViewedProducts;
+        return recentlyViewedProductsService;
     }
 
-    public void setRecentlyViewedProducts(HttpServletRequest request) {
-        request.getSession().setAttribute("recentlyViewedProducts", recentlyViewedList);
+    private void setRecentlyViewedProducts(HttpServletRequest request, Queue<Product> listoSet) {
+        request.getSession().setAttribute("recentlyViewedProducts", listoSet);
     }
 
-    public void addProductToViewedList(Product product) {
-        if(recentlyViewedListModel == null) {
-            recentlyViewedListModel = new RecentlyViewedProductsModel();
+    public void addProductToViewedList(Product product, HttpServletRequest request) {
+        RecentlyViewedProductsModel recentlyViewedProductsModel = new RecentlyViewedProductsModel();
+        Queue<Product> recentlyViewedProductsList = getRecentlyViewedProducts(request);
+        recentlyViewedProductsModel.setRecentlyViewedList(recentlyViewedProductsList);
+        recentlyViewedProductsModel.addProductToViewedList(product);
+        setRecentlyViewedProducts(request, recentlyViewedProductsList);
+    }
+
+    private Queue<Product> getRecentlyViewedProducts(HttpServletRequest request) {
+        Queue<Product> recentlyViewedProductList = (Queue<Product>) request.getSession().getAttribute("recentlyViewedProducts");
+        if (recentlyViewedProductList != null) {
+            return recentlyViewedProductList;
         }
-        recentlyViewedListModel.addProductToViewedList(product);
-        recentlyViewedList = recentlyViewedListModel.getProductList();
-    }
-
-    public Queue<Product> getRecentlyViewedProducts(HttpServletRequest request) {
-        recentlyViewedList = (Queue<Product>) request.getSession().getAttribute("recentlyViewedProducts");
-        return  recentlyViewedList;
+        return new LinkedList<>();
     }
 }

@@ -1,19 +1,16 @@
 package validation;
 
+import com.es.phoneshop.utils.UtilParse;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
 public class CustomValidation {
 
-    private String quantity;
-
     private static CustomValidation customValidation;
 
-    private CustomValidation() {
-    }
+    private CustomValidation() { }
 
     public static CustomValidation getInstance() {
         if (customValidation == null) {
@@ -22,18 +19,12 @@ public class CustomValidation {
         return customValidation;
     }
 
-    public int validQuantity(ErrorMap errorMap, Locale locale, HttpServletRequest request, HttpServletResponse response) {
-        quantity = request.getParameter("quantity");
-        int qnt = 0;
-        if (!quantity.toLowerCase().matches("[0-9]+")) {
-            errorMap.customException("quantity", "Parse exception");
-        }
+    public void validQuantity(ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response) {
         try {
-            qnt = NumberFormat.getInstance(locale).parse(quantity).intValue();
+            UtilParse.parseIntByLocale(request.getLocale(), request.getParameter("quantity"));
         }
         catch (ParseException e) {
-            errorMap.customException("quantity", "Parse exception");
+            errorMap.customException("quantity", "Incorrect Input");
         }
-        return qnt;
     }
 }
