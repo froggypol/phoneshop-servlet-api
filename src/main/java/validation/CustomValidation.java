@@ -20,8 +20,13 @@ public class CustomValidation {
     }
 
     public void validQuantity(ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response) {
+        String quantity = request.getParameter("quantity");
+        if(!quantity.matches("[0-9]+")) {
+            errorMap.customException("quantity", "Incorrect Input");
+            return;
+        }
         try {
-            UtilParse.parseIntByLocale(request.getLocale(), request.getParameter("quantity"));
+            UtilParse.parseIntByLocale(request.getLocale(), quantity);
         }
         catch (ParseException e) {
             errorMap.customException("quantity", "Incorrect Input");
