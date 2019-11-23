@@ -3,7 +3,7 @@ package com.es.phoneshop.model.product;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductDaoInterface {
+public interface ProductDao {
 
     Optional<Product> getProductById(String id);
 

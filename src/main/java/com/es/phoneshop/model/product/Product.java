@@ -95,10 +95,6 @@ public class Product {
         return priceHistory;
     }
 
-    public void setListPrices() {
-
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

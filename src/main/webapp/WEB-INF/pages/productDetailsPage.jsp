@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<jsp:useBean id="products" type="com.es.phoneshop.model.product.Product" scope="request"/>
+<jsp:useBean id="prod" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product List Details Page">
     <p>
         <tr>
@@ -11,7 +11,25 @@
         </tr>
     </p>
     <table>
-
+        </p>
+        <p>
+            <form method="post">
+                <input id="bttAdd" name="quantity" value="${param.query}">
+                <button>Add</button>
+                <c:choose>
+                <c:when test="${not empty errorMap}">
+                    <p>
+                         <a style="color: crimson">Adding products failed:c</a>
+                    </p>
+                </c:when>
+                <c:when test="${not empty param.message}">
+                    <p>
+                        <a style="color: seagreen">Adding ${quantity} products ${param.message} c:</a>
+                    </p>
+                 </c:when>
+                </c:choose>
+            </form>
+        </p>
         <thead>
         <tr>
             <td>Image</td>
@@ -24,21 +42,27 @@
         <tr>
             <td>
                 <img class="product-tile"
-                     src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${products.imageUrl}">
+                     src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${prod.imageUrl}">
             </td>
-            <td>${products.description}</td>
+            <td>${prod.description}</td>
             <td class="price">
-                <fmt:formatNumber value="${products.price}" type="currency"
-                                  currencySymbol="${products.currency.symbol}"/>
+                <fmt:formatNumber value="${prod.price}" type="currency"
+                                  currencySymbol="${prod.currency.symbol}"/>
             </td>
         </tr>
     </table>
-</tags:master>
 
-<script>
-    function wasAdded() {
-        var visibleGreenResult = document.getElementById("successAdding");
-        visibleGreenResult.style.color = "green";
-        visibleGreenResult.style.visibility = "visible";
-    }
-</script>
+    <p style="text-decoration: indigo;">Recently viewed products
+    <c:forEach var="product" items="${recentlyViewedProducts}">
+        <div style="display: inline-block; border: 1px solid lightskyblue; width: 10%">
+            <td>
+                <img class="product-tile"
+                     src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/
+                                 ${product.imageUrl}">
+            </td>
+        <p>${product.description}</p>
+        <p><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/></p>
+        </div>
+    </c:forEach>
+    </p>
+</tags:master>

@@ -14,11 +14,9 @@
         <input name="query" value="${param.query}">
         <button>Search</button>
     </form>
-    </p>
-    <p>
-        <tr>
-            <td></td>
-        </tr>
+    <tr>
+        <td></td>
+    </tr>
     </p>
     <tr>
         <table class="tableProd">
@@ -50,27 +48,26 @@
                 </td>
             </tr>
             </thead>
-            <td class="prodItem">
-                <c:forEach var="product" items="${products}">
-                    <tr class="prod">
-                        <td>
-                            <img class="product-tile"
-                                 src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/
+
+            <c:forEach var="product" items="${products}">
+                <tr class="prod">
+                    <td>
+                        <img class="product-tile"
+                             src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/
                                  ${product.imageUrl}">
-                        </td>
-                        <td>
-                            <tags:details productName="${product.description}" productId="${product.id}"></tags:details>
-                        </td>
-                        <td class="price">
-                            <fmt:formatNumber value="${product.price}" type="currency"
-                                              currencySymbol="${product.currency.symbol}"/>
-                            <tags:menu productDescription="${product.description}" date="${product.priceHistory.date}"
-                                       priceArchieve="${product.priceHistory.priceArchieve}">
-                            </tags:menu>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </td>
+                    </td>
+                    <td>
+                        <a href="prod/${product.id}">${product.description}</a>
+                    </td>
+                    <td class="price">
+                        <fmt:formatNumber value="${product.price}" type="currency"
+                                          currencySymbol="${product.currency.symbol}"/>
+                        <tags:menu productDescription="${product.description}" date="${product.priceHistory.date}"
+                                   priceArchieve="${product.priceHistory.priceArchieve}">
+                        </tags:menu>
+                    </td>
+                </tr>
+            </c:forEach>
         </table>
     </tr>
 </tags:master>

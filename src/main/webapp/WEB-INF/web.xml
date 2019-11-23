@@ -32,8 +32,12 @@
 
     <servlet-mapping>
         <servlet-name>productDetailsPageServlet</servlet-name>
-        <url-pattern>/products/</url-pattern>
+        <url-pattern>/prod/*</url-pattern>
     </servlet-mapping>
+
+    <listener>
+        <listener-class>com.es.phoneshop.listeners.SetCartHttpSessionListener</listener-class>
+    </listener>
 
     <listener>
         <listener-class>com.es.phoneshop.model.product.DaoProductListListener</listener-class>
