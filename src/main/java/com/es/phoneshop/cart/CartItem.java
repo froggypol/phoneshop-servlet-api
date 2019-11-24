@@ -2,10 +2,11 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class CartItem {
+public class CartItem implements Serializable {
 
     private Product productItem;
 
@@ -18,10 +19,6 @@ public class CartItem {
 
     public Product getProductItem() {
         return productItem;
-    }
-
-    public void setProductItem(Product productItem) {
-        this.productItem = productItem;
     }
 
     public int getQuantity() {
