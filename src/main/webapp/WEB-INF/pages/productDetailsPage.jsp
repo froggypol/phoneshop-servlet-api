@@ -15,20 +15,21 @@
         <p>
             <form method="post">
                 <input id="bttAdd" name="quantity" value="${param.query}">
+                <input style="visibility: hidden" name="productId" value="${prod.id}">
                 <button>Add</button>
                 <c:choose>
                 <c:when test="${not empty errorMap}">
-                    <p>
-                         <a style="color: crimson">Adding products failed:c</a>
-                    </p>
-                </c:when>
-                <c:when test="${not empty param.message}">
-                    <p>
-                        <a style="color: seagreen">Adding ${quantity} products ${param.message} c:</a>
-                    </p>
-                 </c:when>
-                </c:choose>
-            </form>
+        <p>
+            <a style="color: crimson">Adding products failed:c</a>
+        </p>
+        </c:when>
+        <c:when test="${not empty param.message}">
+            <p>
+                <a style="color: seagreen">Adding products ${param.message} c:</a>
+            </p>
+        </c:when>
+        </c:choose>
+        </form>
         </p>
         <thead>
         <tr>

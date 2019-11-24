@@ -3,11 +3,13 @@ package com.es.phoneshop.cart;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class Cart {
+public class Cart implements Serializable {
 
     private List<CartItem> cartItemList;
 
@@ -17,20 +19,8 @@ public class Cart {
 
     public Cart() {
         cartItemList = new ArrayList<>();
+        totalCost = BigDecimal.ZERO;
     }
-
-    public int countQuantity() {
-        return getListCartItem().stream()
-                                .mapToInt(CartItem::getQuantity)
-                                .sum();
-    }
-
-    public BigDecimal countCost() {
-        return getListCartItem().stream()
-                                .reduce(BigDecimal.ZERO, ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost())), BigDecimal::add);
-    }
-
-
 
     public void addToCart(int quantity, Product productToAdd) {
         CartItem cartItem = new CartItem(quantity, productToAdd);
@@ -39,6 +29,7 @@ public class Cart {
         }
         if (!cartItemList.contains(cartItem)) {
             addNewCartItem(cartItem);
+            recalculate();
             return;
         } else if (cartItemList.contains(cartItem)) {
             CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
@@ -47,7 +38,7 @@ public class Cart {
         recalculate();
     }
 
-    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+    public void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
         if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
             addedItem.setQuantity(quantity + addedItem.getQuantity());
             cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
@@ -56,7 +47,8 @@ public class Cart {
         }
     }
 
-    private void addNewCartItem(CartItem cartItem) {
+    private void addNewCartItem(CartItem cartItem)
+    {
         cartItemList.add(cartItem);
     }
 
@@ -65,6 +57,35 @@ public class Cart {
         BigDecimal resultCost = countCost();
         setTotalQuantity(resultQuantity);
         setTotalCost(resultCost);
+    }
+
+    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+        refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+        recalculate();
+    }
+
+    public int countQuantity() {
+        return getListCartItem().stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
+    }
+
+    public BigDecimal countCost() {
+        return getListCartItem().stream()
+                .reduce(BigDecimal.ZERO,
+                        ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity())))),
+                        BigDecimal::add);
+    }
+
+    public List<CartItem> deleteCartItem(String idToDelete) {
+        Optional<CartItem> toDelete = cartItemList.stream()
+                .filter(cartItem -> cartItem.getProductItem().getId().equals(idToDelete))
+                .findAny();
+        CartItem toDeleteCartItem = toDelete.get();
+        setTotalCost(totalCost.subtract(toDeleteCartItem.getCost().multiply(new BigDecimal(toDeleteCartItem.getQuantity()))));
+        toDeleteCartItem.setQuantity(0);
+        cartItemList.remove(toDeleteCartItem);
+        return cartItemList;
     }
 
     public List<CartItem> getListCartItem() {
@@ -85,5 +106,9 @@ public class Cart {
 
     private void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
     }
 }

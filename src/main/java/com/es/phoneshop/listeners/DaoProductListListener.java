@@ -1,6 +1,6 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.listeners;
 
-import service.SessionCartService;
+import com.es.phoneshop.model.product.CustomProductDao;
 import service.ProductService;
 
 import javax.servlet.ServletContextEvent;
@@ -11,8 +11,6 @@ public class DaoProductListListener implements ServletContextListener {
     private static CustomProductDao productListSingleton;
 
     private static ProductService productServiceSingleton;
-
-    private static SessionCartService cartServiceSingleton;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

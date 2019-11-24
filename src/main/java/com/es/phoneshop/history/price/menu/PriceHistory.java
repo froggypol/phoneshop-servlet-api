@@ -1,12 +1,13 @@
 package com.es.phoneshop.history.price.menu;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class PriceHistory {
+public class PriceHistory implements Serializable {
 
     private String productDescription;
 
