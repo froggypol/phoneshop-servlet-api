@@ -48,7 +48,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String productQuantityToAdd = request.getParameter("quantity");
         String productDetailsId = getProductId(request);
-        Product product = productService.getProductById(productDetailsId);
         int quantityToAdd;
         ErrorMap errorMap = new ErrorMap();
         customValidation.validQuantity(errorMap, request, response);
@@ -63,16 +62,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
                 cartService.addToCart(productDetailsId, quantityToAdd, request, response);
             }
             catch (OutOfStockException e) {
-                errorMap.customException(product, "Not enough products in stock");
+                errorMap.customException("quantity", "Not enough products in stock");
                 request.setAttribute("errorMap", errorMap);
                 showPage(request, response);
                 return;
             }
             response.sendRedirect(request.getRequestURI() + "?message=success");
         } else {
-            errorMap.customException(product, "Incorrect input");
+            errorMap.customException("quantity", "Incorrect input");
             request.setAttribute("errorMap", errorMap.getExceptionList());
             showPage(request, response);
+            return;
         }
     }
 

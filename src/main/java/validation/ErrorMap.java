@@ -1,28 +1,26 @@
 package validation;
 
-import com.es.phoneshop.model.product.Product;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ErrorMap  {
+public class ErrorMap {
 
-    private Map<Product, List<String>> mapForErrors;
+    private Map<String, List<String>> mapForErrors;
 
     public ErrorMap() {
             mapForErrors = new HashMap<>();
     }
 
-    public void customException(Product product, String message) {
-        if (mapForErrors.get(product) == null) {
-            mapForErrors.put(product, new ArrayList<>());
+    public void customException(String field, String message) {
+        if (mapForErrors.get(field) == null) {
+            mapForErrors.put(field, new ArrayList<>());
         }
-        mapForErrors.get(product).add(message);
+        mapForErrors.get(field).add(message);
     }
 
-    public Map<Product, List<String>> getExceptionList() {
+    public Map<String, List<String>> getExceptionList() {
         return mapForErrors;
     }
 }

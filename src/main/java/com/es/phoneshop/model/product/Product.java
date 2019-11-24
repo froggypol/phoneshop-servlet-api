@@ -2,13 +2,12 @@ package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.history.price.menu.PriceHistory;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Product implements Serializable {
+public class Product {
 
     private String id;
 
