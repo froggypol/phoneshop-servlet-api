@@ -7,6 +7,7 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.utils.UtilParse;
 import validation.CustomValidation;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,11 +22,8 @@ public class SessionCartService implements CartService {
 
     private ProductService productService;
 
-    private CustomValidation customValidation;
-
     private SessionCartService() {
         productService = ProductService.getInstance();
-        customValidation = CustomValidation.getInstance();
     }
 
     public static SessionCartService getInstance() {
@@ -37,8 +35,7 @@ public class SessionCartService implements CartService {
 
     @Override
     public Cart getCart(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Cart cart = (Cart) session.getAttribute("cart");
+        Cart cart = (Cart) request.getSession().getAttribute("cart");
         return cart;
     }
 
@@ -57,13 +54,12 @@ public class SessionCartService implements CartService {
         Cart cart = cartService.getCart(request);
         Product productToAdd = productService.getProductById(id);
         cart.addToCart(quantity, productToAdd);
-
     }
 
-    public void updateCart(List<String> quantityList, HttpServletRequest request) throws ParseException{
+    public void updateCart(List<String> quantityList, HttpServletRequest request) throws ParseException {
         Cart cart = getCart(request);
         List<Integer> quantityValueList = new ArrayList<>();
-        for(int i = 0 ; i < quantityList.size() ; i++) {
+        for (int i = 0; i < quantityList.size(); i++) {
             quantityValueList.add(UtilParse.parseIntByLocale(request.getLocale(), quantityList.get(i)));
             int quantityToRefresh = quantityValueList.get(i);
             CartItem cartItemToRefresh = cart.getListCartItem().get(i);
@@ -73,7 +69,7 @@ public class SessionCartService implements CartService {
         }
     }
 
-    public void deleteCartItem(HttpServletRequest request, String id) {
+    public void deleteCartItem(String id, HttpServletRequest request) {
         Cart cart = getCart(request);
         cart.setCartItemList(cart.deleteCartItem(id));
     }

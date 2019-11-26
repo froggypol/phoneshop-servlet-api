@@ -42,7 +42,7 @@ public class CartPageServlet extends HttpServlet {
         ErrorMap errorMap = new ErrorMap();
         List<String> quantityList = Arrays.stream(request.getParameterValues("quantity")).collect(Collectors.toList());
         customValidation.validQuantity(errorMap, request, response);
-        if(errorMap.getExceptionList().size() != 0) {
+        if (errorMap.getExceptionList().size() != 0) {
             request.setAttribute("errorMap", errorMap.getExceptionList());
             request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
             return;
@@ -51,8 +51,7 @@ public class CartPageServlet extends HttpServlet {
             cartService.updateCart(quantityList, request);
         } catch (ParseException e) {
             return;
-        }
-        catch (OutOfStockException e) {
+        } catch (OutOfStockException e) {
             Product product = productService.getProductById(request.getParameter("productId"));
             errorMap.customException(product, "Not enough product in stock");
             request.setAttribute("errorMap", errorMap.getExceptionList());

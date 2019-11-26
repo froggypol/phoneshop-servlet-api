@@ -1,8 +1,9 @@
 package com.es.phoneshop.model.product;
 
+import java.io.Serializable;
 import java.util.Queue;
 
-public class RecentlyViewedProductsModel {
+public class RecentlyViewedProductsModel implements Serializable {
 
     private Queue<Product> recentlyViewedList;
 

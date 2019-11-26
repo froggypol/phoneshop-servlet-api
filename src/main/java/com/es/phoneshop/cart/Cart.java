@@ -18,8 +18,8 @@ public class Cart implements Serializable {
     private BigDecimal totalCost;
 
     public Cart() {
-        cartItemList = new ArrayList<>();
-        totalCost = BigDecimal.ZERO;
+            cartItemList = new ArrayList<>();
+            totalCost = BigDecimal.ZERO;
     }
 
     public void addToCart(int quantity, Product productToAdd) {
@@ -66,21 +66,21 @@ public class Cart implements Serializable {
 
     public int countQuantity() {
         return getListCartItem().stream()
-                .mapToInt(CartItem::getQuantity)
-                .sum();
+                                .mapToInt(CartItem::getQuantity)
+                                .sum();
     }
 
     public BigDecimal countCost() {
         return getListCartItem().stream()
-                .reduce(BigDecimal.ZERO,
-                        ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity())))),
-                        BigDecimal::add);
+                                .reduce(BigDecimal.ZERO,
+                                        ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity())))),
+                                        BigDecimal::add);
     }
 
     public List<CartItem> deleteCartItem(String idToDelete) {
         Optional<CartItem> toDelete = cartItemList.stream()
-                .filter(cartItem -> cartItem.getProductItem().getId().equals(idToDelete))
-                .findAny();
+                                                  .filter(cartItem -> cartItem.getProductItem().getId().equals(idToDelete))
+                                                  .findAny();
         CartItem toDeleteCartItem = toDelete.get();
         setTotalCost(totalCost.subtract(toDeleteCartItem.getCost().multiply(new BigDecimal(toDeleteCartItem.getQuantity()))));
         toDeleteCartItem.setQuantity(0);

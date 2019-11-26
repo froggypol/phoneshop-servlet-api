@@ -7,6 +7,8 @@ import service.ProductService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 
 public class CustomValidation {
 
@@ -26,19 +28,20 @@ public class CustomValidation {
     }
 
     public void validQuantity(ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response) {
-        String[] quantity = request.getParameterValues("quantity");
-        String[] productsId = request.getParameterValues("productId");
-        for(int i = 0 ; i < quantity.length; i++) {
-            Product product = productService.getProductById(productsId[i]);
-            if (!quantity[i].matches("[0-9]+")) {
+        List<String> quantity = Arrays.asList(request.getParameterValues("quantity"));
+        List<String> productsId = Arrays.asList(request.getParameterValues("productId"));
+        quantity.stream().forEach(quantityItem -> {
+            int id = quantity.indexOf(quantityItem);
+            Product product = productService.getProductById(productsId.get(id));
+            if (!quantityItem.matches("[0-9]+")) {
                 errorMap.customException(product, "Incorrect Input");
                 return;
             }
             try {
-                UtilParse.parseIntByLocale(request.getLocale(), quantity[i]);
+                UtilParse.parseIntByLocale(request.getLocale(), quantityItem);
             } catch (ParseException e) {
                 errorMap.customException(product, "Incorrect Input");
             }
-        }
+        });
     }
 }

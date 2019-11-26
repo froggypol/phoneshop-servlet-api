@@ -14,6 +14,5 @@ public class SetCartHttpSessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-
     }
 }
