@@ -35,12 +35,50 @@
         <url-pattern>/prod/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>cartPageServlet</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cartPageServlet</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteCartItemServlet</servlet-name>
+        <servlet-class>com.es.phoneshop.web.DeleteCartItemServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>deleteCartItemServlet</servlet-name>
+        <url-pattern>/cart/deleteCartItem</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>showMiniCart</servlet-name>
+        <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>showMiniCart</servlet-name>
+        <url-pattern>/minicart</url-pattern>
+    </servlet-mapping>
+
     <listener>
         <listener-class>com.es.phoneshop.listeners.SetCartHttpSessionListener</listener-class>
     </listener>
 
     <listener>
-        <listener-class>com.es.phoneshop.model.product.DaoProductListListener</listener-class>
+        <listener-class>com.es.phoneshop.listeners.CustomSingletonsListener</listener-class>
     </listener>
+
+    <session-config>
+        <session-timeout>15</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <max-age>900</max-age>
+        </cookie-config>
+    </session-config>
 
 </web-app>

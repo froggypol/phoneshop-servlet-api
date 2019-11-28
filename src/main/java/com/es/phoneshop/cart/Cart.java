@@ -3,11 +3,13 @@ package com.es.phoneshop.cart;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class Cart {
+public class Cart implements Serializable {
 
     private List<CartItem> cartItemList;
 
@@ -17,6 +19,47 @@ public class Cart {
 
     public Cart() {
         cartItemList = new ArrayList<>();
+        totalCost = BigDecimal.ZERO;
+    }
+
+    public void addToCart(int quantity, Product productToAdd) {
+        CartItem cartItem = new CartItem(quantity, productToAdd);
+        if (quantity > productToAdd.getStock() || productToAdd.getStock() == 0) {
+            throw new OutOfStockException();
+        }
+        if (!cartItemList.contains(cartItem)) {
+            addNewCartItem(cartItem);
+        } else if (cartItemList.contains(cartItem)) {
+            CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
+            refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+        }
+        recalculate();
+    }
+
+    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+        if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
+            addedItem.setQuantity(quantity);
+            cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
+        } else {
+            throw new OutOfStockException();
+        }
+    }
+
+    private void addNewCartItem(CartItem cartItem)
+    {
+        cartItemList.add(cartItem);
+    }
+
+    private void recalculate() {
+        int resultQuantity = countQuantity();
+        BigDecimal resultCost = countCost();
+        setTotalQuantity(resultQuantity);
+        setTotalCost(resultCost);
+    }
+
+    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+        refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+        recalculate();
     }
 
     public int countQuantity() {
@@ -27,44 +70,21 @@ public class Cart {
 
     public BigDecimal countCost() {
         return getListCartItem().stream()
-                                .reduce(BigDecimal.ZERO, ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost())), BigDecimal::add);
+                                .reduce(BigDecimal.ZERO,
+                                        ((bigDecimal, cartItem) -> {
+                                        BigDecimal totalCost = cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+                                        return bigDecimal.add(totalCost);
+                                        }), BigDecimal::add);
     }
 
-
-
-    public void addToCart(int quantity, Product productToAdd) {
-        CartItem cartItem = new CartItem(quantity, productToAdd);
-        if (quantity > productToAdd.getStock() || productToAdd.getStock() == 0) {
-            throw new OutOfStockException();
-        }
-        if (!cartItemList.contains(cartItem)) {
-            addNewCartItem(cartItem);
-            return;
-        } else if (cartItemList.contains(cartItem)) {
-            CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
-            refreshCartItem(quantity, productToAdd, addedItem, cartItem);
-        }
+    public List<CartItem> deleteCartItem(String idToDelete) {
+        Optional<CartItem> toDelete = cartItemList.stream()
+                                                  .filter(cartItem -> cartItem.getProductItem().getId().equals(idToDelete))
+                                                  .findAny();
+        CartItem toDeleteCartItem = toDelete.get();
+        cartItemList.remove(toDeleteCartItem);
         recalculate();
-    }
-
-    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
-        if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
-            addedItem.setQuantity(quantity + addedItem.getQuantity());
-            cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
-        } else {
-            throw new OutOfStockException();
-        }
-    }
-
-    private void addNewCartItem(CartItem cartItem) {
-        cartItemList.add(cartItem);
-    }
-
-    private void recalculate() {
-        int resultQuantity = countQuantity();
-        BigDecimal resultCost = countCost();
-        setTotalQuantity(resultQuantity);
-        setTotalCost(resultCost);
+        return cartItemList;
     }
 
     public List<CartItem> getListCartItem() {
@@ -85,5 +105,9 @@ public class Cart {
 
     private void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
     }
 }
