@@ -1,13 +1,14 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.utils.UtilParse;
+import javafx.util.Pair;
 import service.RecentlyViewedProductsService;
 import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import service.SessionCartService;
 import service.ProductService;
-import validation.PDPQuantityValidation;
+import validation.QuantityValidator;
 import validation.ErrorMap;
 
 import javax.servlet.ServletException;
@@ -23,7 +24,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private SessionCartService cartService;
 
-    private PDPQuantityValidation pdpQuantityValidation;
+    private QuantityValidator pdpQuantityValidation;
 
     private RecentlyViewedProductsService recentlyViewedProductService;
 
@@ -31,7 +32,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     public void init() {
         productService = ProductService.getInstance();
         cartService = SessionCartService.getInstance();
-        pdpQuantityValidation = PDPQuantityValidation.getInstance();
+        pdpQuantityValidation = QuantityValidator.getInstance();
         recentlyViewedProductService = recentlyViewedProductService.getInstance();
     }
 
@@ -47,7 +48,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = returnProduct(productDetailsId, request, response);
         int quantityToAdd;
         ErrorMap errorMap = new ErrorMap();
-        pdpQuantityValidation.validate(productQuantityToAdd, productDetailsId, errorMap);
+        pdpQuantityValidation.validate(new Pair(productQuantityToAdd, productDetailsId), errorMap);
         try {
             quantityToAdd = UtilParse.parseIntByLocale(request.getLocale(), productQuantityToAdd);
         } catch (ParseException e) {
@@ -84,7 +85,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = new Product();
         try {
             product = productService.getProductById(id);
-        }  catch (CustomNoSuchElementException e) {
+        } catch (CustomNoSuchElementException e) {
             request.getRequestDispatcher("/WEB-INF/pages/customError.jsp").forward(request, response);
         }
         return product;

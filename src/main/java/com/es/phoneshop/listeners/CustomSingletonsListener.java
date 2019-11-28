@@ -4,8 +4,7 @@ import com.es.phoneshop.model.product.CustomProductDao;
 import service.ProductService;
 import service.RecentlyViewedProductsService;
 import service.SessionCartService;
-import validation.CartServiceQuantityValidator;
-import validation.PDPQuantityValidation;
+import validation.QuantityValidator;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -20,18 +19,15 @@ public class CustomSingletonsListener implements ServletContextListener {
 
     private static RecentlyViewedProductsService recentlyViewedProductsService;
 
-    private static PDPQuantityValidation pdpQuantityValidation;
-
-    private static CartServiceQuantityValidator cartServiceQuantityValidator;
+    private static QuantityValidator quantityValidation;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        productListSingleton = CustomProductDao.getInstance();
-        productServiceSingleton = ProductService.getInstance();
-        cartService = SessionCartService.getInstance();
-        recentlyViewedProductsService = RecentlyViewedProductsService.getInstance();
-        pdpQuantityValidation = PDPQuantityValidation.getInstance();
-        cartServiceQuantityValidator = CartServiceQuantityValidator.getInstance();
+        CustomProductDao.getInstance();
+        ProductService.getInstance();
+        SessionCartService.getInstance();
+        RecentlyViewedProductsService.getInstance();
+        QuantityValidator.getInstance();
     }
 
     @Override

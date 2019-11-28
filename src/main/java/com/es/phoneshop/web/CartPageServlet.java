@@ -2,10 +2,11 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+import javafx.util.Pair;
 import service.ProductService;
 import service.SessionCartService;
-import validation.CartServiceQuantityValidator;
 import validation.ErrorMap;
+import validation.QuantityValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,14 +22,14 @@ public class CartPageServlet extends HttpServlet {
 
     private SessionCartService cartService;
 
-    private CartServiceQuantityValidator cartServiceQuantityValidator;
+    private QuantityValidator quantityValidator;
 
     private ProductService productService;
 
     @Override
     public void init() {
         cartService = SessionCartService.getInstance();
-        cartServiceQuantityValidator = CartServiceQuantityValidator.getInstance();
+        quantityValidator = QuantityValidator.getInstance();
         productService = ProductService.getInstance();
     }
 
@@ -63,7 +64,8 @@ public class CartPageServlet extends HttpServlet {
         List<String> productsId = new ArrayList<>(Arrays.asList(request.getParameterValues("productId")));
         List<String> quantityList = new ArrayList<>(Arrays.asList(request.getParameterValues("quantity")));
         for(String quantityItem: quantityList) {
-            cartServiceQuantityValidator.validate(quantityItem, productsId.get(quantityList.indexOf(quantityItem)), errorMap);
+            Pair pairValidQuantity = new Pair<>(quantityItem, productsId.get(quantityList.indexOf(quantityItem)));
+            quantityValidator.validate(pairValidQuantity, errorMap);
         }
         return quantityList;
     }

@@ -15,11 +15,11 @@ public class ErrorMap  {
         mapForErrors = new HashMap<>();
     }
 
-    public void customException(String fieldAndId, String message) {
-        if (mapForErrors.get(fieldAndId) == null) {
-            mapForErrors.put(fieldAndId, new ArrayList<>());
+    public void customException(String field, String message) {
+        if (mapForErrors.get(field) == null) {
+            mapForErrors.put(field, new ArrayList<>());
         }
-        mapForErrors.get(fieldAndId).add(message);
+        mapForErrors.get(field).add(message);
     }
 
     public Map<String, List<String>> getExceptionList() {
