@@ -1,6 +1,6 @@
 package validation;
 
-import com.es.phoneshop.model.product.Product;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,20 +9,24 @@ import java.util.Map;
 
 public class ErrorMap  {
 
-    private Map<Product, List<String>> mapForErrors;
+    private Map<String, List<String>> mapForErrors;
 
     public ErrorMap() {
         mapForErrors = new HashMap<>();
     }
 
-    public void customException(Product product, String message) {
-        if (mapForErrors.get(product) == null) {
-            mapForErrors.put(product, new ArrayList<>());
+    public void customException(String fieldAndId, String message) {
+        if (mapForErrors.get(fieldAndId) == null) {
+            mapForErrors.put(fieldAndId, new ArrayList<>());
         }
-        mapForErrors.get(product).add(message);
+        mapForErrors.get(fieldAndId).add(message);
     }
 
-    public Map<Product, List<String>> getExceptionList() {
+    public Map<String, List<String>> getExceptionList() {
+        return mapForErrors;
+    }
+
+    public Map<String, List<String>> getErrorMap() {
         return mapForErrors;
     }
 }

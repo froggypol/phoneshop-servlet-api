@@ -18,8 +18,8 @@ public class Cart implements Serializable {
     private BigDecimal totalCost;
 
     public Cart() {
-            cartItemList = new ArrayList<>();
-            totalCost = BigDecimal.ZERO;
+        cartItemList = new ArrayList<>();
+        totalCost = BigDecimal.ZERO;
     }
 
     public void addToCart(int quantity, Product productToAdd) {
@@ -29,8 +29,6 @@ public class Cart implements Serializable {
         }
         if (!cartItemList.contains(cartItem)) {
             addNewCartItem(cartItem);
-            recalculate();
-            return;
         } else if (cartItemList.contains(cartItem)) {
             CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
             refreshCartItem(quantity, productToAdd, addedItem, cartItem);
@@ -38,9 +36,9 @@ public class Cart implements Serializable {
         recalculate();
     }
 
-    public void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
         if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
-            addedItem.setQuantity(quantity + addedItem.getQuantity());
+            addedItem.setQuantity(quantity);
             cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
         } else {
             throw new OutOfStockException();
@@ -73,8 +71,10 @@ public class Cart implements Serializable {
     public BigDecimal countCost() {
         return getListCartItem().stream()
                                 .reduce(BigDecimal.ZERO,
-                                        ((bigDecimal, cartItem) -> bigDecimal.add(cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity())))),
-                                        BigDecimal::add);
+                                        ((bigDecimal, cartItem) -> {
+                                        BigDecimal totalCost = cartItem.getCost().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+                                        return bigDecimal.add(totalCost);
+                                        }), BigDecimal::add);
     }
 
     public List<CartItem> deleteCartItem(String idToDelete) {
@@ -82,9 +82,8 @@ public class Cart implements Serializable {
                                                   .filter(cartItem -> cartItem.getProductItem().getId().equals(idToDelete))
                                                   .findAny();
         CartItem toDeleteCartItem = toDelete.get();
-        setTotalCost(totalCost.subtract(toDeleteCartItem.getCost().multiply(new BigDecimal(toDeleteCartItem.getQuantity()))));
-        toDeleteCartItem.setQuantity(0);
         cartItemList.remove(toDeleteCartItem);
+        recalculate();
         return cartItemList;
     }
 

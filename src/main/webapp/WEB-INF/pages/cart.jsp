@@ -44,24 +44,25 @@
 
                     </td>
                     <td>
-                        <input style="visibility: hidden" name="productId" value="${cartItem.productItem.id}">
-                        <button formmethod="post" formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem">Delete</button>
+                        <input type="hidden" name="productId" value="${cartItem.productItem.id}">
+                        <button formmethod="post"
+                                formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem">Delete
+                        </button>
                     </td>
                     <td>
                         <c:choose>
-                            <c:when test="${not empty errorMap[cartItem.productItem]}">
+                            <c:when test="${not empty errorMap}">
                                 <p>
-                                    <a style="color: crimson">Adding failed:c</a>
-                                <p style="color: crimson">
-                                    <c:forEach var="productError" items="${errorMap[cartItem.productItem]}">
-                                        <a>${productError} for ${cartItem.productItem.description}</a>
-                                    </c:forEach>
-                                </p>
+                                    <a style="color: crimson">
+                                        <tags:findErrorMessages tempErrorMap="${errorMap}"
+                                                                currentProduct="${cartItem.productItem}"
+                                                                keyProductId="${cartItem.productItem}"/>
+                                    </a>
                                 </p>
                             </c:when>
                             <c:when test="${not empty param.message}">
                                 <p style="color: forestgreen">
-                                    <a>Added successfully!</a>
+                                    <a>Updated successfully!</a>
                                 </p>
                             </c:when>
                         </c:choose>
@@ -74,7 +75,6 @@
         </p>
     </form>
 
-    <p style="text-decoration: indigo;">Recently viewed products
     <c:forEach var="product" items="${recentlyViewedProducts}">
         <div style="display: inline-block; border: 1px solid lightskyblue; width: 10%">
             <td>
