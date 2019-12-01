@@ -2,12 +2,12 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.utils.UtilParse;
 import javafx.util.Pair;
-import service.RecentlyViewedProductsService;
+import recentlyviewed.RecentlyViewedProductsService;
 import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
-import service.SessionCartService;
-import service.ProductService;
+import com.es.phoneshop.cart.SessionCartService;
+import com.es.phoneshop.model.product.ProductService;
 import validation.QuantityValidator;
 import validation.ErrorMap;
 

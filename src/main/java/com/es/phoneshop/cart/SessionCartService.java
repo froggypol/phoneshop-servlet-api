@@ -1,10 +1,9 @@
-package service;
+package com.es.phoneshop.cart;
 
-import com.es.phoneshop.cart.Cart;
-import com.es.phoneshop.cart.CartItem;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.utils.UtilParse;
+import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +59,7 @@ public class SessionCartService implements CartService {
             quantityValueList.add(UtilParse.parseIntByLocale(request.getLocale(), quantityList.get(i)));
             int quantityToRefresh = quantityValueList.get(i);
             CartItem cartItemToRefresh = cart.getListCartItem().get(i);
-            if (Math.abs(quantityToRefresh - cartItemToRefresh.getQuantity()) > 0) {
+            if (Math.abs(quantityToRefresh - cartItemToRefresh.getQuantity()) != 0) {
                 cart.updateCart(quantityToRefresh, productService.findProducts().get(i), cartItemToRefresh, cartItemToRefresh);
             }
         }
@@ -68,6 +67,7 @@ public class SessionCartService implements CartService {
 
     public void deleteCartItem(String id, HttpServletRequest request) {
         Cart cart = getCart(request);
+        productService.updateProductAfterDeletion(request, id);
         cart.setCartItemList(cart.deleteCartItem(id));
     }
 }

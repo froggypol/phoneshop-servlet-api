@@ -1,4 +1,6 @@
-package com.es.phoneshop.model.product;
+package recentlyviewed;
+
+import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 import java.util.Queue;

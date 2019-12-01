@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Cart implements Serializable {
 
@@ -37,7 +38,7 @@ public class Cart implements Serializable {
     }
 
     private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
-        if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
+        if (quantity <= productToAdd.getStock() - addedItem.getQuantity() || quantity == productToAdd.getStock()) {
             addedItem.setQuantity(quantity);
             cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
         } else {
@@ -87,8 +88,25 @@ public class Cart implements Serializable {
         return cartItemList;
     }
 
+    public void resetOrder() {
+        cartItemList = new ArrayList<>();
+        totalCost = BigDecimal.ZERO;
+        totalQuantity = 0;
+    }
+
     public List<CartItem> getListCartItem() {
         return cartItemList;
+    }
+
+    public List<Product> getProductList() {
+        return  cartItemList.stream()
+                            .map(CartItem::getProductItem)
+                            .collect(Collectors.toList());
+    }
+
+    public CartItem getCartItem (Product product) {
+        return getListCartItem().stream()
+                                .filter(cartItem -> cartItem.getProductItem().getId().equals(product.getId())).findAny().get();
     }
 
     public void setCartItemList(List<CartItem> cartItemList) {

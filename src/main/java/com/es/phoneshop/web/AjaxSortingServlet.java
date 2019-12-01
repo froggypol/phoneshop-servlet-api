@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.google.gson.Gson;
-import service.ProductService;
+import com.es.phoneshop.model.product.ProductService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

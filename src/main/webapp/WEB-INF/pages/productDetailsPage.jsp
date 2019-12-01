@@ -16,7 +16,7 @@
             <form method="post">
                 <input id="bttAdd" name="quantity" value="${param.query}">
                 <input type="hidden" name="productId" value="${prod.id}">
-                <button>Add</button>
+                <button class="btn btn-info">Add</button>
                 <c:choose>
                 <c:when test="${not empty errorMap}">
         <p>
