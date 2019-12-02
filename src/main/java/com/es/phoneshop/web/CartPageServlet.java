@@ -1,7 +1,6 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
-import com.es.phoneshop.model.product.Product;
 import javafx.util.Pair;
 import com.es.phoneshop.model.product.ProductService;
 import com.es.phoneshop.cart.SessionCartService;
@@ -53,13 +52,8 @@ public class CartPageServlet extends HttpServlet {
             return;
         }
         try {
-            cartService.updateCart(quantityList, request);
-        } catch (ParseException e) {
-            showPage(errorMap, request, response);
-            return;
-        } catch (OutOfStockException e) {
-            Product product = productService.getProductById(request.getParameter("productId"));
-            errorMap.customException("quantity&" + product.getId(), "Not enough product in stock");
+            cartService.updateCart(quantityList, errorMap, request);
+        } catch (ParseException | OutOfStockException e) {
             showPage(errorMap, request, response);
             return;
         }

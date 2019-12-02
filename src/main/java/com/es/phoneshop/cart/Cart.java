@@ -2,6 +2,7 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+import validation.ErrorMap;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public class Cart implements Serializable {
         totalCost = BigDecimal.ZERO;
     }
 
-    public void addToCart(int quantity, Product productToAdd) {
+    public void addToCart(int quantity, Product productToAdd, ErrorMap errorMap) {
         CartItem cartItem = new CartItem(quantity, productToAdd);
         if (quantity > productToAdd.getStock() || productToAdd.getStock() == 0) {
             throw new OutOfStockException();
@@ -32,16 +33,17 @@ public class Cart implements Serializable {
             addNewCartItem(cartItem);
         } else if (cartItemList.contains(cartItem)) {
             CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
-            refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+            refreshCartItem(quantity, productToAdd, addedItem, cartItem, errorMap);
         }
         recalculate();
     }
 
-    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
+    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem, ErrorMap errorMap) {
         if (quantity <= productToAdd.getStock() - addedItem.getQuantity() || quantity == productToAdd.getStock()) {
             addedItem.setQuantity(quantity);
             cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
         } else {
+            errorMap.customException("quantity&" + productToAdd.getId(), "Not enough product in stock. Available " + productToAdd.getStock());
             throw new OutOfStockException();
         }
     }
@@ -58,8 +60,8 @@ public class Cart implements Serializable {
         setTotalCost(resultCost);
     }
 
-    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
-        refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem, ErrorMap errorMap) {
+        refreshCartItem(quantity, productToAdd, addedItem, cartItem, errorMap);
         recalculate();
     }
 

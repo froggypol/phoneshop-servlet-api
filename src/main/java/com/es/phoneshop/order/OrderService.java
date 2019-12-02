@@ -1,6 +1,7 @@
 package com.es.phoneshop.order;
 
 import com.es.phoneshop.cart.Cart;
+import com.es.phoneshop.custom.exceptions.CustomNoSuchOrderException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductService;
 import validation.ErrorMap;
@@ -8,6 +9,8 @@ import validation.ErrorMap;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
+import java.util.UUID;
 
 public class OrderService implements OrderDao {
 
@@ -17,8 +20,11 @@ public class OrderService implements OrderDao {
 
     private ProductService productService;
 
+    private CustomOrderDao orderDao;
+
     private OrderService() {
         productService = ProductService.getInstance();
+        orderDao = CustomOrderDao.getInstance();
     }
 
     public static OrderService getInstance() {
@@ -39,6 +45,8 @@ public class OrderService implements OrderDao {
             order.setAddress(request.getParameter("address"));
             order.setDate(new SimpleDateFormat(DATE_FORMAT).parse(request.getParameter("date")));
             order.setPhoneNumber(request.getParameter("phone"));
+            order.setId(UUID.randomUUID().toString());
+            orderDao.saveOrder(order);
         }
         return order;
     }
@@ -49,8 +57,13 @@ public class OrderService implements OrderDao {
                                .forEach(cartItem -> {
                                    Product checkedProduct = productService.findProducts().get(order.getListCartItem().indexOf(cartItem));
                                    if (cartItem.getQuantity() > checkedProduct.getStock()) {
-                                       errorMap.customException("quantity&" + checkedProduct.getId(), "Not enough stock. Avaliable " + checkedProduct.getStock());
+                                       errorMap.customException("quantity&" + checkedProduct.getId(), "Not enough stock. Available" + checkedProduct.getStock());
                                    }
                                });
+    }
+
+    public Optional<Order> getOrderById(String id) throws CustomNoSuchOrderException {
+        return orderDao.getOrderList().stream()
+                                      .filter(order -> order.getId().equals(id)).findAny();
     }
 }

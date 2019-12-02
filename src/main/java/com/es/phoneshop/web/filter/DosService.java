@@ -1,6 +1,9 @@
 package com.es.phoneshop.web.filter;
 
+import javafx.util.Pair;
+
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,11 +11,11 @@ public class DosService implements DosProtectionService {
 
     private final int MAX_AVAILABLE_REQUESTS = 2000;
 
+    private final long MAX_AVAILABLE_TIME = 10;
+
     private static DosService dosService;
 
-    private Integer counter;
-
-    private Map<String, Integer> requestCountMap;
+    private Map<String, Pair<Long,Integer>> requestCountMap;
 
     private DosService() {
         requestCountMap = new ConcurrentHashMap<>();
@@ -29,14 +32,17 @@ public class DosService implements DosProtectionService {
     @Override
     public boolean allowed(HttpServletRequest request) {
         String ip = request.getRemoteAddr();
-        counter = requestCountMap.get(ip);
-        if (counter == null) {
-            requestCountMap.put(ip, 0);
-            counter = 0;
-        } else if (counter > MAX_AVAILABLE_REQUESTS) {
+        Pair<Long, Integer> counter = requestCountMap.get(ip);
+        if (counter == null || counter.getKey() > MAX_AVAILABLE_TIME) {
+            counter = new Pair<>(Long.valueOf(0), 0);
+            requestCountMap.put(ip, counter);
+            return true;
+        } else if (counter.getValue() > MAX_AVAILABLE_REQUESTS) {
             return false;
         }
-        requestCountMap.put(ip, counter++);
+        long spentTime = new Date().getTime() + counter.getKey();
+        Integer count = counter.getValue();
+        requestCountMap.put(ip, new Pair<>(spentTime, count++));
         return true;
     }
 }

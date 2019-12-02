@@ -11,7 +11,7 @@
         </tr>
     </p>
 
-    <form method="post" action="${pageContext.servletContext.contextPath}/cart">
+    <form>
         <table class="tableProd">
             <td>Image</td>
             <td>Description</td>
@@ -23,6 +23,9 @@
                 </label>
                 <label>
                 <input value="Delivery Cost : ${order.deliveryCost}" readonly>
+                </label>
+                <label>
+                    <input type="hidden" value="${order.id}">
                 </label>
             </div>
             <c:forEach var="cartItem" items="${order.listCartItem}">

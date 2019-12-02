@@ -45,35 +45,24 @@ public class ProductService {
 
     public void updateProductAfterOrder(HttpServletRequest request) {
         Cart cart = (Cart) request.getSession().getAttribute("cart");
-        setCustomList(productDaoService.findProducts()
-                .stream()
-                .map(product -> {
-                    if (cart.getProductList().contains(product)) {
-                        Product productInCart = cart.getCartItem(product).getProductItem();
-                        CartItem cartItem = cart.getCartItem(productInCart);
-                        if (cartItem != null) {
-                            int index = cart.getListCartItem().indexOf(cartItem);
-                            product.setStock(product.getStock() - cart.getListCartItem().get(index).getQuantity());
-                        }
-                    }
-                    return product;
-                })
-                .collect(Collectors.toList()));
+        setCustomList(returnUpdatedProductList(cart));
     }
 
-    public void updateProductAfterDeletion(HttpServletRequest request, String id) {
-        Cart cart = (Cart) request.getSession().getAttribute("cart");
-        setCustomList(productDaoService.findProducts()
-                .stream()
-                .map(product -> {
-                    if (!cart.getProductList().contains(product)) {
-                        Product deletedProduct = productDaoService.getProductById(id).get();
-                        CartItem deletedCartItem = cart.getListCartItem().get(cart.getListCartItem().indexOf(deletedProduct));
-                        product.setStock(product.getStock() + deletedCartItem.getQuantity());
-                    }
-                    return product;
-                })
-                .collect(Collectors.toList()));
+    private List<Product> returnUpdatedProductList(Cart cart) {
+        return productDaoService.findProducts()
+                                .stream()
+                                .map(product -> {
+                                    if (cart.getProductList().contains(product)) {
+                                        Product productInCart = cart.getCartItem(product).getProductItem();
+                                        CartItem cartItem = cart.getCartItem(productInCart);
+                                        if (cartItem != null) {
+                                            int index = cart.getListCartItem().indexOf(cartItem);
+                                            product.setStock(product.getStock() - cart.getListCartItem().get(index).getQuantity());
+                                        }
+                                    }
+                                return product;
+                                })
+                                .collect(Collectors.toList());
     }
 
     public void save(Product product) {

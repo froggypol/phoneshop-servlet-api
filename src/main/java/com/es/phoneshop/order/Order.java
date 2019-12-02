@@ -6,6 +6,7 @@ import com.es.phoneshop.cart.CartItem;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Order extends Cart {
 
@@ -24,6 +25,8 @@ public class Order extends Cart {
     private String address;
 
     private String phoneNumber;
+
+    private String id;
 
     public Order(Cart cart) {
         cartItemList = cart.getListCartItem();
@@ -47,9 +50,9 @@ public class Order extends Cart {
     private BigDecimal getDeliveryCost(String way) {
         synchronized (this) {
             if (way.equals("cash")) {
-                deliveryCost = new BigDecimal(5);
-            } else if (way.equals("creditCard")) {
                 deliveryCost = new BigDecimal(15);
+            } else if (way.equals("creditCard")) {
+                deliveryCost = new BigDecimal(5);
             }
             return deliveryCost;
         }
@@ -109,6 +112,14 @@ public class Order extends Cart {
         }
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         synchronized (this) {
             this.name = name;
@@ -137,5 +148,18 @@ public class Order extends Cart {
         synchronized (this) {
             this.phoneNumber = phoneNumber;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -70,9 +70,8 @@ public class CheckoutPageServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp").forward(request, response);
             return;
         }
-        request.setAttribute("order", order);
         productService.updateProductAfterOrder(request);
-        request.getRequestDispatcher("/WEB-INF/pages/overview.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/checkout/overview/" + order.getId());
         cart.resetOrder();
     }
 

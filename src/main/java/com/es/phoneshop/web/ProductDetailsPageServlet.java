@@ -57,7 +57,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         if (errorMap.getExceptionList().size() == 0) {
             request.setAttribute("quantity", productQuantityToAdd);
             try {
-                cartService.addToCart(productDetailsId, quantityToAdd, request, response);
+                cartService.addToCart(productDetailsId, quantityToAdd, errorMap, request, response);
             } catch (OutOfStockException e) {
                 errorMap.customException("quantity&" + product.getId(), "Not enough products in stock");
                 request.setAttribute("errorMap", errorMap.getErrorMap());

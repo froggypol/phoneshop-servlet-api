@@ -72,7 +72,7 @@
 
     <servlet-mapping>
         <servlet-name>showOrder</servlet-name>
-        <url-pattern>/checkout/overview</url-pattern>
+        <url-pattern>/checkout/overview/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -92,7 +92,7 @@
 
     <filter-mapping>
         <filter-name>dosFilter</filter-name>
-        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*</url-pattern>
     </filter-mapping>
 
     <listener>
