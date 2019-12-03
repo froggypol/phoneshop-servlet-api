@@ -10,8 +10,8 @@
             <a href="/phoneshop_servlet_api_war_exploded/products">Back To The Main Page</a>
         </tr>
     </p>
-
-    <form>
+    <p> Congratulations! Your order is :</p>
+    <p>
         <table class="tableProd">
             <td>Image</td>
             <td>Description</td>
@@ -19,11 +19,16 @@
             <td>Quantity</td>
             <div>
                 <label>
-                <input value="Total Cost : ${order.subTotal}" readonly>
+                    <input value="Subtotal Cost : ${order.subTotal-order.deliveryCost}" readonly>
                 </label>
-                <label>
-                <input value="Delivery Cost : ${order.deliveryCost}" readonly>
+                <p>
+                    <label>
+                    <input value="Total Cost : ${order.subTotal}" readonly>
                 </label>
+                </p>
+                    <label>
+                        <input value="Delivery Cost : ${order.deliveryCost}" readonly>
+                    </label>
                 <label>
                     <input type="hidden" value="${order.id}">
                 </label>
@@ -54,7 +59,11 @@
                 </tr>
             </c:forEach>
         </table>
-    Congrats!
-   <p>Dear ${order.surName} ${order.name}</p>
-    <p>Your order will be prepared to ${order.date}<p>
+    <br>
+       <p>Customer info:</p>
+    <p>Order will be ready for ${order.date}</p>
+    <form>
+        <form><label><input readonly value="${order.surName}"></label></form>
+        <form><label><input readonly value="${order.name}"></label></form>
+    </form>
 </tags:master>

@@ -61,7 +61,9 @@
                      src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/
                                  ${product.imageUrl}">
             </td>
-        <p>${product.description}</p>
+        <p>
+            <a href="prod/${product.id}">${product.description}</a>
+        </p>
         <p><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/></p>
         </div>
     </c:forEach>

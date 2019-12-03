@@ -62,7 +62,6 @@
             <input type="hidden" value="${order.id}">
         </label>
     </div>
-    <%--<form method="post" action="http://localhost:8080/phoneshop_servlet_api_war_exploded/checkout/overview?id=${order.id}">--%>
     <form method="post">
         <table>
             <td>Name</td>
@@ -108,6 +107,6 @@
             </tr>
         </table>
         <br>
-        <button>Place Order</button>
+        <button class="btn btn-info">Place Order</button>
     </form>
 </tags:master>

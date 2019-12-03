@@ -10,7 +10,7 @@
 <jsp:useBean id="products" type="java.util.List" scope="request"/>
 <tags:master pageTitle="Product List">
     <p>
-    <form>
+    <form method="get">
         <input name="query" value="${param.query}"/>
         <button class="btn btn-info">Search</button>
     </form>
