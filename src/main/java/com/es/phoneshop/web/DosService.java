@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.filter;
+package com.es.phoneshop.web;
 
 import javafx.util.Pair;
 

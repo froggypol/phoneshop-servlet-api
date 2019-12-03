@@ -35,10 +35,12 @@ public class OrderService implements OrderDao {
     }
 
     @Override
-    public Order placeOrder(Cart cart, HttpServletRequest request) throws ParseException {
-        Order order = new Order(cart);
-        String wayOfPayment = request.getParameter("payment");
-        order.recalculate(wayOfPayment);
+    public void placeOrder(Order order, String wayOfPayment){
+        orderDao.recalculate(wayOfPayment, order);
+        orderDao.saveOrder(order);
+    }
+
+    public void saveCustomerInfo(HttpServletRequest request, Order order) throws ParseException {
         order.setName(request.getParameter("firstName"));
         if (order.getName() != null) {
             order.setSurName(request.getParameter("secondName"));
@@ -46,9 +48,7 @@ public class OrderService implements OrderDao {
             order.setDate(new SimpleDateFormat(DATE_FORMAT).parse(request.getParameter("date")));
             order.setPhoneNumber(request.getParameter("phone"));
             order.setId(UUID.randomUUID().toString());
-            orderDao.saveOrder(order);
         }
-        return order;
     }
 
     public void checkoutStock(ErrorMap errorMap, Cart cart) {
@@ -57,7 +57,8 @@ public class OrderService implements OrderDao {
                                .forEach(cartItem -> {
                                    Product checkedProduct = productService.findProducts().get(order.getListCartItem().indexOf(cartItem));
                                    if (cartItem.getQuantity() > checkedProduct.getStock()) {
-                                       errorMap.customException("quantity&" + checkedProduct.getId(), "Not enough stock. Available" + checkedProduct.getStock());
+                                       errorMap.customException("quantity&" + checkedProduct.getId(),
+                                               "Not enough stock. Available" + checkedProduct.getStock());
                                    }
                                });
     }

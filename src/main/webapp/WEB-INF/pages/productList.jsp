@@ -11,7 +11,7 @@
 <tags:master pageTitle="Product List">
     <p>
     <form>
-        <input name="query" value="${param.query}">
+        <input name="query" value="${param.query}"/>
         <button class="btn btn-info">Search</button>
     </form>
     <tr>
@@ -31,19 +31,16 @@
                     <form>
                         <input type="button" class="btn btn-primary" id="descriptionSelectDesc" value="desc" onclick="f2()"
                                href="products/ajax?query=${param.query}&sortField=description&order=desc">
-                        </button>
                     </form>
                 </td>
                 <td>Price
                     <form>
                         <input type="button" class="btn btn-primary" id="priceSelectAsc" value="asc" onclick="f3()"
                                href="products/ajax?query=${param.query}&sortField=price&order=asc">
-                        </inputbutton>
                     </form>
                     <form>
                         <input type="button" class="btn btn-primary" id="priceSelectDesc" value="desc" onclick="f4()"
                                href="products/ajax?query=${param.query}&sortField=price&order=desc">
-                        </inputbutton>
                     </form>
                 </td>
             </tr>

@@ -87,7 +87,7 @@
 
     <filter>
         <filter-name>dosFilter</filter-name>
-        <filter-class>com.es.phoneshop.web.filter.DosFilter</filter-class>
+        <filter-class>com.es.phoneshop.web.DosFilter</filter-class>
     </filter>
 
     <filter-mapping>

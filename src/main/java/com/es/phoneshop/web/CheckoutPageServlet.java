@@ -21,10 +21,13 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private ProductService productService;
 
+    private NameSurnameValidator nameSurnameValidator;
+
     @Override
     public void init() {
         productService = ProductService.getInstance();
         orderService = OrderService.getInstance();
+        nameSurnameValidator = NameSurnameValidator.getInstance();
     }
 
     @Override
@@ -43,11 +46,6 @@ public class CheckoutPageServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
             return;
         }
-        try {
-            order = orderService.placeOrder(cart, request);
-        } catch (ParseException e) {
-            request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
-        }
         request.setAttribute("order", order);
         request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp").forward(request, response);
     }
@@ -56,9 +54,11 @@ public class CheckoutPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = (Cart)request.getSession().getAttribute("cart");
         ErrorMap errorMap = validation(request);
-        Order order;
+        Order order = new Order(cart);
         try {
-            order = orderService.placeOrder(cart, request);
+            String wayOfPayment = request.getParameter("payment");
+            orderService.placeOrder(order, wayOfPayment);
+            orderService.saveCustomerInfo(request, order);
         } catch (ParseException e) {
             errorMap.customException("date", "Invalid date format");
             request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp").forward(request, response);
@@ -77,7 +77,6 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private ErrorMap validation(HttpServletRequest request) {
         ErrorMap errorMap = new ErrorMap();
-        NameSurnameValidator nameSurnameValidator = new NameSurnameValidator();
         nameSurnameValidator.validate(new Pair<>("name", request.getParameter("firstName")), errorMap);
         nameSurnameValidator.validate(new Pair<>("surname", request.getParameter("secondName")), errorMap);
         return errorMap;

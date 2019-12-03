@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.filter;
+package com.es.phoneshop.web;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -18,7 +18,6 @@ public class DosFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (dosService.allowed((HttpServletRequest) servletRequest)) {
             filterChain.doFilter(servletRequest, servletResponse);
-            return;
         } else {
             ((HttpServletResponse)servletResponse).sendError(429);
         }
@@ -31,6 +30,5 @@ public class DosFilter implements Filter {
 
     @Override
     public void destroy() {
-
     }
 }

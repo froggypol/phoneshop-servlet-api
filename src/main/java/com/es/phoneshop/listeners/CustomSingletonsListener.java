@@ -3,9 +3,10 @@ package com.es.phoneshop.listeners;
 import com.es.phoneshop.model.product.CustomProductDao;
 import com.es.phoneshop.model.product.ProductService;
 import com.es.phoneshop.order.OrderService;
-import com.es.phoneshop.web.filter.DosService;
 import recentlyviewed.RecentlyViewedProductsService;
 import com.es.phoneshop.cart.SessionCartService;
+import validation.DateValidator;
+import validation.NameSurnameValidator;
 import validation.QuantityValidator;
 
 import javax.servlet.ServletContextEvent;
@@ -25,17 +26,23 @@ public class CustomSingletonsListener implements ServletContextListener {
 
     private static OrderService orderService;
 
-    private static DosService dosService;
+    private static NameSurnameValidator nameSurnameValidator;
+
+    private static DateValidator dateValidator;
+
+//    private static DosService dosService;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        CustomProductDao.getInstance();
-        ProductService.getInstance();
-        SessionCartService.getInstance();
-        RecentlyViewedProductsService.getInstance();
-        QuantityValidator.getInstance();
-        OrderService.getInstance();
-        DosService.getInstance();
+        productListSingleton = CustomProductDao.getInstance();
+        productServiceSingleton = ProductService.getInstance();
+        cartService = SessionCartService.getInstance();
+        recentlyViewedProductsService = RecentlyViewedProductsService.getInstance();
+        quantityValidation = QuantityValidator.getInstance();
+        orderService = OrderService.getInstance();
+        nameSurnameValidator = NameSurnameValidator.getInstance();
+        dateValidator = DateValidator.getInstance();
+//        DosService.getInstance();
     }
 
     @Override
