@@ -55,7 +55,8 @@ public class OrderService implements OrderDao {
         Order order = new Order(cart);
         order.getListCartItem().stream()
                                .forEach(cartItem -> {
-                                   Product checkedProduct = productService.findProducts().get(order.getListCartItem().indexOf(cartItem));
+                                   int indexFromCartItem = order.getListCartItem().indexOf(cartItem);
+                                   Product checkedProduct = productService.findProducts().get(indexFromCartItem);
                                    if (cartItem.getQuantity() > checkedProduct.getStock()) {
                                        errorMap.customException("quantity&" + checkedProduct.getId(),
                                                "Not enough stock. Available" + checkedProduct.getStock());
