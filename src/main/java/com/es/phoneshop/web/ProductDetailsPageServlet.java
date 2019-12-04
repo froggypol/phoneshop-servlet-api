@@ -2,14 +2,17 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.utils.UtilParse;
 import javafx.util.Pair;
-import service.RecentlyViewedProductsService;
+import recentlyviewed.RecentlyViewedProductsService;
 import com.es.phoneshop.custom.exceptions.CustomNoSuchElementException;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
-import service.SessionCartService;
-import service.ProductService;
+import com.es.phoneshop.cart.SessionCartService;
+import com.es.phoneshop.model.product.ProductService;
+import review.ReviewDaoService;
+import review.ReviewItem;
 import validation.QuantityValidator;
 import validation.ErrorMap;
+import validation.ReviewStringValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,12 +31,18 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentlyViewedProductsService recentlyViewedProductService;
 
+    private ReviewDaoService reviewService;
+
+    private ReviewStringValidator reviewStringValidator;
+
     @Override
     public void init() {
         productService = ProductService.getInstance();
         cartService = SessionCartService.getInstance();
         pdpQuantityValidation = QuantityValidator.getInstance();
         recentlyViewedProductService = recentlyViewedProductService.getInstance();
+        reviewService = ReviewDaoService.getInstance();
+        reviewStringValidator = ReviewStringValidator.getInstance();
     }
 
     @Override
@@ -48,6 +57,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = returnProduct(productDetailsId, request, response);
         int quantityToAdd;
         ErrorMap errorMap = new ErrorMap();
+        String customerName = request.getParameter("customerName");
+        String rate = request.getParameter("rate");
+        String comment = request.getParameter("comment");
+        reviewStringValidator.validate(new Pair<>("customer", customerName), errorMap);
+        reviewStringValidator.validate(new Pair<>("customer", comment), errorMap);
+        if (errorMap.getExceptionList().size() == 0 && customerName != "" && rate != "" && comment != "") {
+            reviewService.addComment(customerName, rate, comment);
+            request.setAttribute("comments", reviewService.getList());
+            response.sendRedirect(request.getRequestURI());
+            return;
+        }
         pdpQuantityValidation.validate(new Pair(productQuantityToAdd, productDetailsId), errorMap);
         try {
             quantityToAdd = UtilParse.parseIntByLocale(request.getLocale(), productQuantityToAdd);
@@ -57,7 +77,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         if (errorMap.getExceptionList().size() == 0) {
             request.setAttribute("quantity", productQuantityToAdd);
             try {
-                cartService.addToCart(productDetailsId, quantityToAdd, request, response);
+                cartService.addToCart(productDetailsId, quantityToAdd, errorMap, request, response);
             } catch (OutOfStockException e) {
                 errorMap.customException("quantity&" + product.getId(), "Not enough products in stock");
                 request.setAttribute("errorMap", errorMap.getErrorMap());

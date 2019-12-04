@@ -2,12 +2,14 @@ package com.es.phoneshop.cart;
 
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
+import validation.ErrorMap;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Cart implements Serializable {
 
@@ -22,7 +24,7 @@ public class Cart implements Serializable {
         totalCost = BigDecimal.ZERO;
     }
 
-    public void addToCart(int quantity, Product productToAdd) {
+    public void addToCart(int quantity, Product productToAdd, ErrorMap errorMap) {
         CartItem cartItem = new CartItem(quantity, productToAdd);
         if (quantity > productToAdd.getStock() || productToAdd.getStock() == 0) {
             throw new OutOfStockException();
@@ -31,16 +33,17 @@ public class Cart implements Serializable {
             addNewCartItem(cartItem);
         } else if (cartItemList.contains(cartItem)) {
             CartItem addedItem = cartItemList.get(cartItemList.indexOf(cartItem));
-            refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+            refreshCartItem(quantity, productToAdd, addedItem, cartItem, errorMap);
         }
         recalculate();
     }
 
-    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
-        if (quantity <= productToAdd.getStock() - addedItem.getQuantity()) {
+    private void refreshCartItem(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem, ErrorMap errorMap) {
+        if (quantity <= productToAdd.getStock() - addedItem.getQuantity() || quantity == productToAdd.getStock()) {
             addedItem.setQuantity(quantity);
             cartItemList.set(cartItemList.indexOf(cartItem), addedItem);
         } else {
+            errorMap.customException("quantity&" + productToAdd.getId(), "Not enough product in stock. Available " + productToAdd.getStock());
             throw new OutOfStockException();
         }
     }
@@ -57,8 +60,8 @@ public class Cart implements Serializable {
         setTotalCost(resultCost);
     }
 
-    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem) {
-        refreshCartItem(quantity, productToAdd, addedItem, cartItem);
+    public void updateCart(int quantity, Product productToAdd, CartItem addedItem, CartItem cartItem, ErrorMap errorMap) {
+        refreshCartItem(quantity, productToAdd, addedItem, cartItem, errorMap);
         recalculate();
     }
 
@@ -87,8 +90,25 @@ public class Cart implements Serializable {
         return cartItemList;
     }
 
+    public void resetOrder() {
+        cartItemList = new ArrayList<>();
+        totalCost = BigDecimal.ZERO;
+        totalQuantity = 0;
+    }
+
     public List<CartItem> getListCartItem() {
         return cartItemList;
+    }
+
+    public List<Product> getProductList() {
+        return  cartItemList.stream()
+                            .map(CartItem::getProductItem)
+                            .collect(Collectors.toList());
+    }
+
+    public CartItem getCartItem (Product product) {
+        return getListCartItem().stream()
+                                .filter(cartItem -> cartItem.getProductItem().getId().equals(product.getId())).findAny().get();
     }
 
     public void setCartItemList(List<CartItem> cartItemList) {

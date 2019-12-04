@@ -5,6 +5,20 @@
          version="3.1">
     <display-name>Phoneshop servlet api training</display-name>
 
+    <welcome-file-list>
+        <welcome-file>WelcomePage</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>WelcomePage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.WelcomePageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WelcomePage</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>productList</servlet-name>
         <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
@@ -65,6 +79,36 @@
         <url-pattern>/minicart</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>showCheckoutPage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>showOrder</servlet-name>
+        <url-pattern>/checkout/overview/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>showOrder</servlet-name>
+        <servlet-class>com.es.phoneshop.web.OrderOverviewPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>showCheckoutPage</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>dosFilter</filter-name>
+        <filter-class>com.es.phoneshop.web.DosFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>dosFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>com.es.phoneshop.listeners.SetCartHttpSessionListener</listener-class>
     </listener>
@@ -72,13 +116,5 @@
     <listener>
         <listener-class>com.es.phoneshop.listeners.CustomSingletonsListener</listener-class>
     </listener>
-
-    <session-config>
-        <session-timeout>15</session-timeout>
-        <cookie-config>
-            <http-only>true</http-only>
-            <max-age>900</max-age>
-        </cookie-config>
-    </session-config>
 
 </web-app>

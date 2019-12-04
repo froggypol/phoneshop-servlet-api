@@ -45,7 +45,7 @@
                     </td>
                     <td>
                         <input type="hidden" name="productId" value="${cartItem.productItem.id}">
-                        <button formmethod="post"
+                        <button class="btn btn-danger" formmethod="post"
                                 formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem">Delete
                         </button>
                     </td>
@@ -70,9 +70,14 @@
                 </tr>
             </c:forEach>
         </table>
-        <p>
-            <button>Update</button>
-        </p>
+        <br>
+            <button class="btn btn-info">Update</button>
+        </br>
+    </form>
+
+    <br>
+    <form method="get" action="${pageContext.servletContext.contextPath}/checkout">
+        <button class="btn btn-info">Order</button>
     </form>
 
     <c:forEach var="product" items="${recentlyViewedProducts}">
@@ -86,5 +91,4 @@
         <p><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/></p>
         </div>
     </c:forEach>
-    </p>
 </tags:master>
