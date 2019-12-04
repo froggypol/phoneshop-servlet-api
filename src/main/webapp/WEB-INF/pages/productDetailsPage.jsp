@@ -25,7 +25,7 @@
         </c:when>
         <c:when test="${not empty param.message}">
             <p>
-                <a style="color: seagreen">Adding products ${param.message} c:</a>
+                <a style="color: seagreen">Updating ${param.message} c:</a>
             </p>
         </c:when>
         </c:choose>
@@ -52,6 +52,57 @@
             </td>
         </tr>
     </table>
+
+    <br>
+    <form method="post">
+        <button>Leave comment</button>
+    <table>
+        <form method="post">
+            <tr>
+                <td>YourName</td>
+                <td>Rate for product</td>
+                <td>Leave Comment</td>
+            </tr>
+            <td>
+                <label>
+                    <input type="text" name="customerName" required>
+                </label>
+
+            </td>
+            <td>Format: only numbers
+                <label>
+                    <input type="text" name="rate" pattern="[0-9]" required>
+                </label>
+            </td>
+            <td>
+                <label>
+                    <input type="text" name="comment" required>
+                </label>
+            </td>
+        </form>
+    </table>
+    <br>
+</form>
+    <br>
+    <c:forEach var="commentValue" items="${comments}">
+        <div>
+            <tr>
+                <td>YourName</td>
+                <td>Rate for product</td>
+                <td>Leave Comment</td>
+            </tr>
+            <td>
+                    <input type="text" value="${commentValue.customerName}" readonly>
+            </td>
+            <td>
+                    <input type="text" value="${commentValue.rate}" readonly >
+            </td>
+            <td>
+                    <input type="text" name="comment" value="${commentValue.comment}" readonly >
+            </td>
+        </div>
+    </c:forEach>
+    </p>
 
     <p style="text-decoration: indigo;">Recently viewed products
     <c:forEach var="product" items="${recentlyViewedProducts}">

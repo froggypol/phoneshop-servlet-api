@@ -8,8 +8,11 @@ import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.cart.SessionCartService;
 import com.es.phoneshop.model.product.ProductService;
+import review.ReviewDaoService;
+import review.ReviewItem;
 import validation.QuantityValidator;
 import validation.ErrorMap;
+import validation.ReviewStringValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,12 +31,18 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private RecentlyViewedProductsService recentlyViewedProductService;
 
+    private ReviewDaoService reviewService;
+
+    private ReviewStringValidator reviewStringValidator;
+
     @Override
     public void init() {
         productService = ProductService.getInstance();
         cartService = SessionCartService.getInstance();
         pdpQuantityValidation = QuantityValidator.getInstance();
         recentlyViewedProductService = recentlyViewedProductService.getInstance();
+        reviewService = ReviewDaoService.getInstance();
+        reviewStringValidator = ReviewStringValidator.getInstance();
     }
 
     @Override
@@ -48,6 +57,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = returnProduct(productDetailsId, request, response);
         int quantityToAdd;
         ErrorMap errorMap = new ErrorMap();
+        String customerName = request.getParameter("customerName");
+        String rate = request.getParameter("rate");
+        String comment = request.getParameter("comment");
+        reviewStringValidator.validate(new Pair<>("customer", customerName), errorMap);
+        reviewStringValidator.validate(new Pair<>("customer", comment), errorMap);
+        if (errorMap.getExceptionList().size() == 0 && customerName != "" && rate != "" && comment != "") {
+            reviewService.addComment(customerName, rate, comment);
+            request.setAttribute("comments", reviewService.getList());
+            response.sendRedirect(request.getRequestURI());
+            return;
+        }
         pdpQuantityValidation.validate(new Pair(productQuantityToAdd, productDetailsId), errorMap);
         try {
             quantityToAdd = UtilParse.parseIntByLocale(request.getLocale(), productQuantityToAdd);

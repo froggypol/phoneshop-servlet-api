@@ -5,6 +5,20 @@
          version="3.1">
     <display-name>Phoneshop servlet api training</display-name>
 
+    <welcome-file-list>
+        <welcome-file>WelcomePage</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>WelcomePage</servlet-name>
+        <servlet-class>com.es.phoneshop.web.WelcomePageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WelcomePage</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>productList</servlet-name>
         <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
