@@ -98,7 +98,7 @@ public class Product implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
         if (this == o) return true;
         Product product = (Product) o;
         return Objects.equals(id, product.id);

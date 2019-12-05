@@ -1,10 +1,10 @@
-package service;
+package com.es.phoneshop.cart;
 
-import com.es.phoneshop.cart.Cart;
-import com.es.phoneshop.cart.CartItem;
 import com.es.phoneshop.custom.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.utils.UtilParse;
+import com.es.phoneshop.model.product.ProductService;
+import validation.ErrorMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,21 +47,21 @@ public class SessionCartService implements CartService {
     }
 
     @Override
-    public void addToCart(String id, int quantity, HttpServletRequest request, HttpServletResponse response) throws OutOfStockException {
+    public void addToCart(String id, int quantity, ErrorMap errorMap, HttpServletRequest request, HttpServletResponse response) throws OutOfStockException {
         Cart cart = cartService.getCart(request);
         Product productToAdd = productService.getProductById(id);
-        cart.addToCart(quantity, productToAdd);
+        cart.addToCart(quantity, productToAdd, errorMap);
     }
 
-    public void updateCart(List<String> quantityList, HttpServletRequest request) throws ParseException {
+    public void updateCart(List<String> quantityList, ErrorMap errorMap, HttpServletRequest request) throws ParseException {
         Cart cart = getCart(request);
         List<Integer> quantityValueList = new ArrayList<>();
         for (int i = 0; i < quantityList.size(); i++) {
             quantityValueList.add(UtilParse.parseIntByLocale(request.getLocale(), quantityList.get(i)));
             int quantityToRefresh = quantityValueList.get(i);
             CartItem cartItemToRefresh = cart.getListCartItem().get(i);
-            if (Math.abs(quantityToRefresh - cartItemToRefresh.getQuantity()) > 0) {
-                cart.updateCart(quantityToRefresh, productService.findProducts().get(i), cartItemToRefresh, cartItemToRefresh);
+            if (Math.abs(quantityToRefresh - cartItemToRefresh.getQuantity()) != 0) {
+                cart.updateCart(quantityToRefresh, cartItemToRefresh.getProductItem(), cartItemToRefresh, cartItemToRefresh, errorMap);
             }
         }
     }

@@ -10,9 +10,9 @@
 <jsp:useBean id="products" type="java.util.List" scope="request"/>
 <tags:master pageTitle="Product List">
     <p>
-    <form>
-        <input name="query" value="${param.query}">
-        <button>Search</button>
+    <form method="get">
+        <input name="query" value="${param.query}"/>
+        <button class="btn btn-info">Search</button>
     </form>
     <tr>
         <td></td>
@@ -26,24 +26,21 @@
                 <td>Description
                     <form>
                         <input href="products/ajax?query=${param.query}&sortField=description&order=asc"
-                               type="button" id="descriptionSelectAsc" value="asc" onclick="f1()">
+                               type="button" class="btn btn-primary" id="descriptionSelectAsc" value="asc" onclick="f1()">
                     </form>
                     <form>
-                        <input type="button" id="descriptionSelectDesc" value="desc" onclick="f2()"
+                        <input type="button" class="btn btn-primary" id="descriptionSelectDesc" value="desc" onclick="f2()"
                                href="products/ajax?query=${param.query}&sortField=description&order=desc">
-                        </button>
                     </form>
                 </td>
                 <td>Price
                     <form>
-                        <input type="button" id="priceSelectAsc" value="asc" onclick="f3()"
+                        <input type="button" class="btn btn-primary" id="priceSelectAsc" value="asc" onclick="f3()"
                                href="products/ajax?query=${param.query}&sortField=price&order=asc">
-                        </inputbutton>
                     </form>
                     <form>
-                        <input type="button" id="priceSelectDesc" value="desc" onclick="f4()"
+                        <input type="button" class="btn btn-primary" id="priceSelectDesc" value="desc" onclick="f4()"
                                href="products/ajax?query=${param.query}&sortField=price&order=desc">
-                        </inputbutton>
                     </form>
                 </td>
             </tr>

@@ -8,7 +8,7 @@
         <title>Not Found Such Product</title>
     </head>
     <body>
-    <a>Your product not found!</a>
+    <a>Your order not found!</a>
     <p>
         <a href="${pageContext.servletContext.contextPath}/products">Back To The Main Page</a>
     </p>
